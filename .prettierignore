@@ -1,0 +1,12 @@
+node_modules
+.next
+.turbo
+out
+dist
+public
+supabase/.branches
+supabase/.temp
+*.log
+pnpm-lock.yaml
+package-lock.json
+yarn.lock

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "crons": [
+    {
+      "path": "/api/cron/dispatch-notifications",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/cron/notify-ticket-expiring",
+      "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/cron/sweep-expired-tickets",
+      "schedule": "0 1 * * *"
+    },
+    {
+      "path": "/api/cron/notify-reservation-reminder",
+      "schedule": "0 10 * * *"
+    }
+  ]
+}
