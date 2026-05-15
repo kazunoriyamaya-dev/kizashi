@@ -66,6 +66,15 @@ const ServerEnvSchema = z.object({
   GOOGLE_ADS_CUSTOMER_ID: z.string().min(1).optional(),
   TIKTOK_ADS_ACCESS_TOKEN: z.string().min(1).optional(),
   AFFILIATE_WEBHOOK_SECRET: z.string().min(1).optional(),
+
+  // サイト運営者情報 (法的表記・お問い合わせで使用)
+  SITE_OPERATOR_NAME: z.string().min(1).optional(),
+  SITE_OPERATOR_REPRESENTATIVE: z.string().min(1).optional(),
+  SITE_OPERATOR_ADDRESS: z.string().min(1).optional(),
+  SITE_OPERATOR_PHONE: z.string().min(1).optional(),
+  CONTACT_EMAIL: z.string().email().optional(),
+  PRIVACY_OFFICER: z.string().min(1).optional(),
+  SUPPORT_URL: z.string().url().optional().or(z.literal('')),
 });
 
 export type ServerEnv = z.infer<typeof ServerEnvSchema>;

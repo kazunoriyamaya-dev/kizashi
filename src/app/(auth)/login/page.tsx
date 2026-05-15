@@ -67,10 +67,32 @@ export default async function LoginPage({
           </form>
 
           <p className="pt-4 text-center text-xs text-muted-foreground">
-            ログインすることで利用規約とプライバシーポリシーに同意したものとみなします。
+            ログイン (新規登録) することで{' '}
+            <a href="/legal/terms" className="underline" target="_blank" rel="noopener noreferrer">
+              利用規約
+            </a>{' '}
+            と{' '}
+            <a
+              href="/legal/privacy"
+              className="underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              プライバシーポリシー
+            </a>{' '}
+            に同意したものとみなします。
           </p>
         </CardContent>
       </Card>
+      <p className="mt-6 text-center text-xs text-muted-foreground">
+        <a href="/" className="hover:underline">
+          ← Kizashi トップへ
+        </a>
+        <span className="mx-2">·</span>
+        <a href="/contact" className="hover:underline">
+          お問い合わせ
+        </a>
+      </p>
     </main>
   );
 }

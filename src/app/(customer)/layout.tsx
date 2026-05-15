@@ -24,7 +24,24 @@ export default async function CustomerLayout({ children }: { children: React.Rea
           </div>
         </div>
       </header>
-      <main className="mx-auto max-w-screen-md px-4 pb-24 pt-4">{children}</main>
+      <main className="mx-auto max-w-screen-md px-4 pb-4 pt-4">{children}</main>
+      <div className="mx-auto max-w-screen-md px-4 pb-28 pt-2 text-center text-xs text-muted-foreground">
+        <a href="/contact" className="hover:underline">
+          お問い合わせ
+        </a>
+        <span className="mx-2">·</span>
+        <a href="/legal/terms" className="hover:underline">
+          利用規約
+        </a>
+        <span className="mx-2">·</span>
+        <a href="/legal/privacy" className="hover:underline">
+          プライバシーポリシー
+        </a>
+        <span className="mx-2">·</span>
+        <a href="/legal/tokushoho" className="hover:underline">
+          特商法表記
+        </a>
+      </div>
       <CustomerBottomNav />
     </div>
   );

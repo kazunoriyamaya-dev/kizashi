@@ -32,9 +32,12 @@ const PUBLIC_PATHS = [
   '/lp',
   '/blog',
   '/r',
+  '/contact',
+  '/legal',
   '/api/marketing/subscribe',
   '/api/marketing/track',
   '/api/marketing/affiliate-webhook',
+  '/api/contact',
   // Webhook 系は middleware を通さない（route handler 側で署名検証）
 ];
 

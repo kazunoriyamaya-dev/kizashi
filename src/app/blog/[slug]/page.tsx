@@ -7,6 +7,8 @@ import type { Metadata } from 'next';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { renderMarkdownToHtml } from '@/lib/marketing/blog/markdown';
 import { buildTrialCtaUrl } from '@/lib/marketing/landing-pages/render';
+import { PublicHeader } from '@/components/public/site-header';
+import { PublicFooter } from '@/components/public/site-footer';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -59,58 +61,58 @@ export default async function BlogPostPage({ params }: Props) {
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12">
-      <nav className="mb-6 text-sm text-muted-foreground">
-        <Link href="/blog" className="hover:underline">
-          ← ブログ一覧
-        </Link>
-      </nav>
+    <>
+      <PublicHeader />
+      <main className="mx-auto max-w-3xl px-4 py-12">
+        <nav className="mb-6 text-sm text-muted-foreground">
+          <Link href="/blog" className="hover:underline">
+            ← ブログ一覧
+          </Link>
+        </nav>
 
-      <article>
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold leading-tight sm:text-4xl">{post.title}</h1>
-          <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-            {post.published_at && <span>{post.published_at.slice(0, 10)}</span>}
-            {post.author_display_name && <span>by {post.author_display_name}</span>}
-            {post.reading_minutes && <span>約 {post.reading_minutes} 分で読めます</span>}
-            {post.tags && post.tags.length > 0 && (
-              <span className="text-primary">{post.tags.map((t) => `#${t}`).join(' ')}</span>
-            )}
-          </div>
-        </header>
+        <article>
+          <header className="mb-8">
+            <h1 className="text-3xl font-bold leading-tight sm:text-4xl">{post.title}</h1>
+            <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+              {post.published_at && <span>{post.published_at.slice(0, 10)}</span>}
+              {post.author_display_name && <span>by {post.author_display_name}</span>}
+              {post.reading_minutes && <span>約 {post.reading_minutes} 分で読めます</span>}
+              {post.tags && post.tags.length > 0 && (
+                <span className="text-primary">{post.tags.map((t) => `#${t}`).join(' ')}</span>
+              )}
+            </div>
+          </header>
 
-        <div
-          className="prose prose-slate prose-headings:font-bold prose-a:text-primary max-w-none"
-          // 本文 HTML は admin が登録した Markdown を renderMarkdownToHtml でエスケープ済み。
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: html }}
-        />
-      </article>
+          <div
+            className="prose prose-slate prose-headings:font-bold prose-a:text-primary max-w-none"
+            // 本文 HTML は admin が登録した Markdown を renderMarkdownToHtml でエスケープ済み。
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
+        </article>
 
-      {/* 体験予約 CTA: ブログから新規生徒への導線 */}
-      <aside className="mt-16 rounded-lg border-2 border-primary bg-primary/5 p-8 text-center">
-        <h2 className="text-2xl font-bold">Kizashi で実際に体験してみませんか？</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          小中学生向けのパーソナルレッスンを、無料体験から始められます。
-        </p>
-        <a
-          href={buildTrialCtaUrl({
-            utm: {
-              source: 'blog',
-              medium: 'organic',
-              campaign: post.slug,
-              content: 'article-footer',
-            },
-          })}
-          className="mt-6 inline-block rounded-md bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-md hover:bg-primary/90"
-        >
-          無料体験レッスンを予約する
-        </a>
-      </aside>
-
-      <footer className="mt-16 border-t pt-8 text-center text-xs text-muted-foreground">
-        <p>© Kizashi</p>
-      </footer>
-    </main>
+        {/* 体験予約 CTA: ブログから新規生徒への導線 */}
+        <aside className="mt-16 rounded-lg border-2 border-primary bg-primary/5 p-8 text-center">
+          <h2 className="text-2xl font-bold">Kizashi で実際に体験してみませんか？</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            小中学生向けのパーソナルレッスンを、無料体験から始められます。
+          </p>
+          <a
+            href={buildTrialCtaUrl({
+              utm: {
+                source: 'blog',
+                medium: 'organic',
+                campaign: post.slug,
+                content: 'article-footer',
+              },
+            })}
+            className="mt-6 inline-block rounded-md bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-md hover:bg-primary/90"
+          >
+            無料体験レッスンを予約する
+          </a>
+        </aside>
+      </main>
+      <PublicFooter />
+    </>
   );
 }
