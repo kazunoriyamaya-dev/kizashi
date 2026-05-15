@@ -25,7 +25,9 @@ export default async function LandingPagesPage() {
       <div>
         <h1 className="text-2xl font-bold">LP (ランディングページ)</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          /lp/[slug] で公開されます。publish_at を設定すると cron で自動公開されます。
+          /lp/[slug] で公開されます。LP のゴールは <b>新規顧客の体験予約申込</b>。
+          公開ページのヘッダー / フッターには常に「無料体験予約」CTA が表示され、
+          /login?redirect_to=/mypage/trial-reservation 経由でアトリビューション付きで体験予約画面に誘導します。
         </p>
       </div>
 
@@ -50,12 +52,45 @@ export default async function LandingPagesPage() {
           <Input id="subheadline" name="subheadline" maxLength={400} />
         </div>
         <div className="space-y-1">
-          <Label htmlFor="cta_label">CTA ボタン文言</Label>
-          <Input id="cta_label" name="cta_label" placeholder="無料で体験予約する" />
+          <Label htmlFor="cta_label">ヒーロー CTA 文言 (任意)</Label>
+          <Input id="cta_label" name="cta_label" placeholder="例: 詳しい資料をダウンロード" />
         </div>
         <div className="space-y-1">
-          <Label htmlFor="cta_url">CTA リンク先</Label>
-          <Input id="cta_url" name="cta_url" type="url" />
+          <Label htmlFor="cta_url">ヒーロー CTA リンク先 (任意)</Label>
+          <Input id="cta_url" name="cta_url" type="url" placeholder="https://..." />
+        </div>
+        <div className="space-y-1 sm:col-span-2">
+          <p className="text-xs text-muted-foreground">
+            ※ 「無料体験レッスンを予約する」CTA はゴール固定のため自動で末尾に追加されます。
+            下記で文言だけカスタマイズできます。
+          </p>
+        </div>
+        <div className="space-y-1 sm:col-span-2">
+          <Label htmlFor="trial_cta_headline">体験予約 CTA 見出し</Label>
+          <Input
+            id="trial_cta_headline"
+            name="trial_cta_headline"
+            placeholder="まずは無料体験レッスンから"
+            maxLength={200}
+          />
+        </div>
+        <div className="space-y-1 sm:col-span-2">
+          <Label htmlFor="trial_cta_description">体験予約 CTA 説明文</Label>
+          <Textarea
+            id="trial_cta_description"
+            name="trial_cta_description"
+            rows={2}
+            placeholder="Kizashi の講師と実際にレッスンを体験して..."
+          />
+        </div>
+        <div className="space-y-1 sm:col-span-2">
+          <Label htmlFor="trial_cta_bullets">体験で得られるメリット (1 行 1 項目 or カンマ区切り)</Label>
+          <Textarea
+            id="trial_cta_bullets"
+            name="trial_cta_bullets"
+            rows={3}
+            placeholder={'お子様 1 人につき 1 回まで無料\nお子様に合った先生を見つけられます\n勧誘は一切ありません'}
+          />
         </div>
         <div className="space-y-1 sm:col-span-2">
           <Label htmlFor="body_html">本文 (HTML)</Label>

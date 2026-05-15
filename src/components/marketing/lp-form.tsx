@@ -14,9 +14,15 @@ interface Props {
   landingPageId: string;
   sequenceId: string | null;
   submitLabel?: string;
+  trialCtaUrl?: string;
 }
 
-export function LandingPageSubscribeForm({ landingPageId, sequenceId, submitLabel }: Props) {
+export function LandingPageSubscribeForm({
+  landingPageId,
+  sequenceId,
+  submitLabel,
+  trialCtaUrl,
+}: Props) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [agreed, setAgreed] = useState(false);
@@ -56,8 +62,16 @@ export function LandingPageSubscribeForm({ landingPageId, sequenceId, submitLabe
 
   if (state === 'success') {
     return (
-      <div className="mt-4 rounded-md border border-green-300 bg-green-50 p-4 text-sm text-green-800">
-        ご登録ありがとうございます。確認メールをお送りします。
+      <div className="mt-4 space-y-3 rounded-md border border-green-300 bg-green-50 p-4 text-sm text-green-800">
+        <p>ご登録ありがとうございます。確認メールをお送りします。</p>
+        {trialCtaUrl && (
+          <a
+            href={trialCtaUrl}
+            className="inline-block rounded-md bg-primary px-6 py-2 font-semibold text-primary-foreground hover:bg-primary/90"
+          >
+            続けて無料体験レッスンを予約する →
+          </a>
+        )}
       </div>
     );
   }
@@ -90,10 +104,18 @@ export function LandingPageSubscribeForm({ landingPageId, sequenceId, submitLabe
       {error && (
         <p className="text-sm text-destructive sm:col-span-2">{error}</p>
       )}
-      <div className="sm:col-span-2">
+      <div className="flex flex-wrap items-center gap-3 sm:col-span-2">
         <Button type="submit" disabled={state === 'loading'}>
           {state === 'loading' ? '送信中…' : (submitLabel ?? '送信')}
         </Button>
+        {trialCtaUrl && (
+          <a
+            href={trialCtaUrl}
+            className="text-sm text-primary underline hover:text-primary/80"
+          >
+            すぐに無料体験を予約したい方はこちら →
+          </a>
+        )}
       </div>
     </form>
   );

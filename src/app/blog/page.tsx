@@ -4,6 +4,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { buildTrialCtaUrl } from '@/lib/marketing/landing-pages/render';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -24,11 +25,21 @@ export default async function BlogIndexPage() {
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-12">
-      <header className="mb-10">
-        <h1 className="text-3xl font-bold">ブログ</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          学習法・体験談・お知らせなどを発信しています。
-        </p>
+      <header className="mb-10 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold">ブログ</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            学習法・体験談・お知らせなどを発信しています。
+          </p>
+        </div>
+        <a
+          href={buildTrialCtaUrl({
+            utm: { source: 'blog', medium: 'organic', campaign: 'index', content: 'header' },
+          })}
+          className="inline-block rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90"
+        >
+          無料体験レッスンを予約する
+        </a>
       </header>
 
       {(!posts || posts.length === 0) && (

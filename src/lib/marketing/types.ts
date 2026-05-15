@@ -42,6 +42,14 @@ export type LandingPageBlock =
   | { kind: 'faq'; items: Array<{ q: string; a: string }> }
   | { kind: 'cta'; headline: string; subheadline?: string; ctaLabel: string; ctaUrl: string }
   | { kind: 'form'; title?: string; description?: string; sequenceId?: string; submitLabel?: string }
+  | {
+      kind: 'trial_cta';
+      headline?: string;
+      description?: string;
+      ctaLabel?: string;          // 既定: 「無料体験レッスンを予約する」
+      ctaUrl?: string;            // 既定: /login?redirect_to=/mypage/trial-reservation&utm_*=...
+      bullets?: string[];         // 体験で得られるメリット箇条書き
+    }
   | { kind: 'rich_text'; html: string };
 
 // =====================================================

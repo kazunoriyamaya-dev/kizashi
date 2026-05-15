@@ -6,6 +6,7 @@
  */
 import Link from 'next/link';
 import { Sparkles, Image as ImageIcon, MessageCircle, MailPlus, ListChecks, FileText, PenSquare, Link as LinkIcon, BarChart3, Megaphone, LayoutDashboard } from 'lucide-react';
+import { requireRole } from '@/lib/auth';
 import { MarketingSubnav } from '@/components/admin/marketing/subnav';
 
 export const MARKETING_NAV = [
@@ -22,7 +23,11 @@ export const MARKETING_NAV = [
   { href: '/admin/marketing/analytics', label: '分析', Icon: BarChart3 },
 ] as const;
 
-export default function MarketingLayout({ children }: { children: React.ReactNode }) {
+export default async function MarketingLayout({ children }: { children: React.ReactNode }) {
+  // 上位の (admin) layout でも認可するが、二重防御で再検証する。
+  // マーケ機能は admin 専用 (生徒数増加のための新規顧客マーケティング)。
+  await requireRole('admin');
+
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 border-b pb-2">

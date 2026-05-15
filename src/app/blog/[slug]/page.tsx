@@ -7,6 +7,7 @@ import type { Metadata } from 'next';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { renderMarkdownToHtml } from '@/lib/marketing/blog/markdown';
+import { buildTrialCtaUrl } from '@/lib/marketing/landing-pages/render';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -85,6 +86,27 @@ export default async function BlogPostPage({ params }: Props) {
           dangerouslySetInnerHTML={{ __html: html }}
         />
       </article>
+
+      {/* 体験予約 CTA: ブログから新規生徒への導線 */}
+      <aside className="mt-16 rounded-lg border-2 border-primary bg-primary/5 p-8 text-center">
+        <h2 className="text-2xl font-bold">Kizashi で実際に体験してみませんか？</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          小中学生向けのパーソナルレッスンを、無料体験から始められます。
+        </p>
+        <a
+          href={buildTrialCtaUrl({
+            utm: {
+              source: 'blog',
+              medium: 'organic',
+              campaign: post.slug,
+              content: 'article-footer',
+            },
+          })}
+          className="mt-6 inline-block rounded-md bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-md hover:bg-primary/90"
+        >
+          無料体験レッスンを予約する
+        </a>
+      </aside>
 
       <footer className="mt-16 border-t pt-8 text-center text-xs text-muted-foreground">
         <p>© Kizashi</p>

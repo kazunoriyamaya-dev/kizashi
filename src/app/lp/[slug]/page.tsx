@@ -9,7 +9,7 @@ import { headers } from 'next/headers';
 import type { Metadata } from 'next';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
-import { normalizeBlocks } from '@/lib/marketing/landing-pages/render';
+import { normalizeBlocks, buildTrialCtaUrl } from '@/lib/marketing/landing-pages/render';
 import { LandingPageSubscribeForm } from '@/components/marketing/lp-form';
 
 export const dynamic = 'force-dynamic';
@@ -57,15 +57,28 @@ export default async function LandingPageRoute({ params }: Props) {
 
   const blocks = normalizeBlocks(page.blocks);
   const host = headers().get('host') ?? '';
+  const trialUrl = buildTrialCtaUrl({
+    slug: page.slug,
+    utm: { source: 'lp', medium: 'organic', campaign: page.slug, content: 'hero' },
+  });
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-12 sm:py-20">
-      {/* Hero (DB の headline を最上部固定で出す) */}
+      {/* Hero (DB の headline を最上部固定で出す) + 体験予約 CTA */}
       <header className="mb-12 text-center">
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">{page.headline}</h1>
         {page.subheadline && (
           <p className="mt-4 text-lg text-muted-foreground">{page.subheadline}</p>
         )}
+        <a
+          href={trialUrl}
+          className="mt-8 inline-block rounded-md bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-md hover:bg-primary/90"
+        >
+          無料体験レッスンを予約する
+        </a>
+        <p className="mt-2 text-xs text-muted-foreground">
+          1〜2 分でお申込みできます。お子様 1 人につき 1 回まで無料です。
+        </p>
       </header>
 
       <div className="space-y-12">
@@ -158,8 +171,44 @@ export default async function LandingPageRoute({ params }: Props) {
                   <LandingPageSubscribeForm
                     landingPageId={page.id}
                     sequenceId={block.sequenceId ?? null}
-                    submitLabel={block.submitLabel ?? '送信'}
+                    submitLabel={block.submitLabel ?? 'まずは資料を受け取る'}
+                    trialCtaUrl={trialUrl}
                   />
+                </section>
+              );
+            case 'trial_cta':
+              return (
+                <section
+                  key={idx}
+                  className="rounded-lg border-2 border-primary bg-primary/5 p-8 text-center"
+                >
+                  <h2 className="text-2xl font-bold sm:text-3xl">
+                    {block.headline ?? 'まずは無料体験レッスンから'}
+                  </h2>
+                  {block.description && (
+                    <p className="mt-3 text-muted-foreground">{block.description}</p>
+                  )}
+                  {block.bullets && block.bullets.length > 0 && (
+                    <ul className="mt-6 inline-block space-y-2 text-left text-sm">
+                      {block.bullets.map((b, j) => (
+                        <li key={j} className="flex items-start gap-2">
+                          <span aria-hidden className="text-primary">✓</span>
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <div className="mt-8">
+                    <a
+                      href={block.ctaUrl ?? trialUrl}
+                      className="inline-block rounded-md bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-md hover:bg-primary/90"
+                    >
+                      {block.ctaLabel ?? '無料体験レッスンを予約する'}
+                    </a>
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      お子様 1 人につき 1 回まで無料。1〜2 分でお申込みできます。
+                    </p>
+                  </div>
                 </section>
               );
             case 'rich_text':
@@ -177,6 +226,22 @@ export default async function LandingPageRoute({ params }: Props) {
           }
         })}
       </div>
+
+      {/* 末尾の最終 CTA。ブロックに trial_cta が無い場合の保険 */}
+      {!blocks.some((b) => b.kind === 'trial_cta' || b.kind === 'cta') && (
+        <section className="mt-16 rounded-lg border-2 border-primary bg-primary/5 p-8 text-center">
+          <h2 className="text-2xl font-bold">まずは無料体験レッスンから</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Kizashi では実際の体験レッスンを通してお子様に合う先生を見つけられます。
+          </p>
+          <a
+            href={trialUrl}
+            className="mt-6 inline-block rounded-md bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-md hover:bg-primary/90"
+          >
+            無料体験レッスンを予約する
+          </a>
+        </section>
+      )}
 
       <footer className="mt-16 border-t pt-8 text-center text-xs text-muted-foreground">
         <p>powered by Kizashi · {host}</p>

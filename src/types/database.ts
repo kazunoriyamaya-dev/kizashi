@@ -823,6 +823,34 @@ interface MarketingAdMetricsDailyRow {
   fetched_at: string;
 }
 
+interface MarketingAttributionRow {
+  id: string;
+  subscriber_id: string | null;
+  email: string;
+  lead_source_kind: string;
+  landing_page_id: string | null;
+  blog_post_id: string | null;
+  sns_post_id: string | null;
+  affiliate_link_id: string | null;
+  ad_campaign_id: string | null;
+  campaign_id: string | null;
+  utm_source: string | null;
+  utm_medium: string | null;
+  utm_campaign: string | null;
+  utm_content: string | null;
+  referrer: string | null;
+  lead_at: string;
+  profile_id: string | null;
+  profile_linked_at: string | null;
+  trial_reserved_at: string | null;
+  trial_completed_at: string | null;
+  first_paid_at: string | null;
+  first_payment_jpy: number | null;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 interface MarketingAnalyticsEventsRow {
   id: string;
   event_name: string;
@@ -906,6 +934,7 @@ export interface Database {
       marketing_ad_campaigns: WithBase<MarketingAdCampaignsRow>;
       marketing_ad_metrics_daily: WithBase<MarketingAdMetricsDailyRow>;
       marketing_analytics_events: WithBase<MarketingAnalyticsEventsRow>;
+      marketing_attribution: WithBase<MarketingAttributionRow>;
     };
     Views: {
       instructors_public: {
@@ -1065,6 +1094,15 @@ export interface Database {
       fn_increment_blog_view: {
         Args: { p_blog_id: string };
         Returns: void;
+      };
+      fn_sync_marketing_attribution: {
+        Args: Record<string, never>;
+        Returns: {
+          linked: number;
+          trial_reserved: number;
+          trial_completed: number;
+          first_paid: number;
+        }[];
       };
     };
     Enums: {

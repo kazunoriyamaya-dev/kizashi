@@ -28,6 +28,13 @@ const PUBLIC_PATHS = [
   '/api/auth/line/start',
   '/api/auth/line/callback',
   '/api/instructor/accept-invite',
+  // マーケティング 新規顧客向け公開ページ群
+  '/lp',
+  '/blog',
+  '/r',
+  '/api/marketing/subscribe',
+  '/api/marketing/track',
+  '/api/marketing/affiliate-webhook',
   // Webhook 系は middleware を通さない（route handler 側で署名検証）
 ];
 

@@ -15,6 +15,7 @@ import { dispatchScheduledLineBroadcasts } from '@/lib/marketing/line/broadcast'
 import { dispatchEmailSequences } from '@/lib/marketing/sequences/dispatch';
 import { publishDueLandingPages } from '@/lib/marketing/landing-pages/scheduler';
 import { publishDueBlogPosts } from '@/lib/marketing/blog/scheduler';
+import { syncAttribution } from '@/lib/marketing/attribution';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -24,13 +25,14 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ ok: false, error: 'unauthorized' }, { status: 401 });
   }
 
-  const [sns, line, seq, lp, blog] = await Promise.all([
+  const [sns, line, seq, lp, blog, attribution] = await Promise.all([
     dispatchScheduledSnsPosts(),
     dispatchScheduledLineBroadcasts(),
     dispatchEmailSequences(),
     publishDueLandingPages(),
     publishDueBlogPosts(),
+    syncAttribution(),
   ]);
 
-  return NextResponse.json({ ok: true, sns, line, seq, lp, blog });
+  return NextResponse.json({ ok: true, sns, line, seq, lp, blog, attribution });
 }

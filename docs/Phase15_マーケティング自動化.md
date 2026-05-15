@@ -2,6 +2,30 @@
 
 Kizashi 予約管理に追加した **マーケティング自動化システム** の MVP 骨組み一式。
 
+## 目的
+
+**生徒数の増加 (新規顧客獲得)** に最適化。既存生徒向けの内部管理ではなく、外部の見込み顧客 (保護者) を:
+
+1. 認知 (SNS / ブログ / 広告)
+2. リード化 (LP 購読フォーム)
+3. ナーチャリング (ステップメール / 公式 LINE)
+4. **体験予約申込** (Q003 体験予約フローへの誘導)
+5. 体験完了
+6. 有料化 (チケット購入)
+
+の順で導線設計し、各段階を attribution テーブルで追跡します。
+
+## アクセス制御
+
+| ロール | アクセス |
+|---|---|
+| admin | `/admin/marketing/*` 全機能。`(admin)` layout + marketing layout の二重防御で `requireRole('admin')` |
+| anon (見込み顧客) | `/lp/[slug]`, `/blog`, `/blog/[slug]`, `/r/[code]`, `/api/marketing/{subscribe,track}` のみ |
+| 講師 / 既存顧客 | 管理 UI は閲覧不可。middleware でロール不一致リダイレクト |
+| service_role | cron / webhook のみ |
+
+middleware の PUBLIC_PATHS にマーケ公開パスを明示 (`/lp`, `/blog`, `/r`, `/api/marketing/*`)。
+
 ## 提供範囲 (Q025 反映)
 
 | 領域 | 実装内容 | 外部連携 |
@@ -53,11 +77,12 @@ Kizashi 予約管理に追加した **マーケティング自動化システム
 - `marketing_sns_posts` — SNS 各 ch への予約投稿
 - `marketing_line_segments` / `_broadcasts` / `_scenarios` — 公式 LINE
 - `marketing_email_sequences` / `_sequence_steps` / `_subscribers` / `_enrollments` / `_sends` — ステップメール
-- `marketing_landing_pages` — LP 本体 (`blocks` jsonb)
+- `marketing_landing_pages` — LP 本体 (`blocks` jsonb、`trial_cta` ブロックを常時末尾に挿入)
 - `marketing_blog_categories` / `_blog_posts` — ブログ CMS
 - `marketing_affiliate_programs` / `_links` / `_clicks` / `_conversions` — アフィリエイト
 - `marketing_ad_campaigns` / `_ad_metrics_daily` — 広告
 - `marketing_analytics_events` — 汎用イベント
+- `marketing_attribution` — **新規顧客獲得ファネル** (lead → trial → customer → paid、流入源を first-touch で保持)
 
 ### RLS
 - 全テーブルに `admin all access` ポリシー。
@@ -69,6 +94,41 @@ Kizashi 予約管理に追加した **マーケティング自動化システム
 - `fn_record_affiliate_click(p_link_id, p_ip_hash, p_user_agent, p_referrer)` — atomic クリック記録 + counter インクリメント
 - `fn_increment_landing_page_view(p_lp_id)` — LP PV カウンタ
 - `fn_increment_blog_view(p_blog_id)` — ブログ PV カウンタ
+- `fn_sync_marketing_attribution()` — service_role 専用。`marketing_attribution.email` ↔ `profiles.email` 結合で `profile_id` / `trial_reserved_at` / `trial_completed_at` / `first_paid_at` / `first_payment_jpy` を更新。cron バッチ `marketing-dispatch` から 10 分毎に実行。
+
+## 新規顧客獲得 導線
+
+```
+SNS / 広告 / アフィリエイト
+        │
+        ▼
+   ブログ / LP (公開)
+        │
+        ├─ 末尾に固定 [無料体験レッスンを予約する] CTA
+        │     → /login?redirect_to=/mypage/trial-reservation&utm_*=...
+        │
+        └─ メール購読フォーム
+              │  (lead capture + lead_source_kind 記録)
+              ▼
+        marketing_email_subscribers + marketing_attribution(lead_at)
+              │
+              ▼
+     ステップメール (各ステップに体験予約 CTA を記載)
+              │
+              ▼
+      [体験予約] (既存 /mypage/trial-reservation)
+              │
+              ▼  cron sync (fn_sync_marketing_attribution)
+        marketing_attribution.trial_reserved_at / trial_completed_at
+              │
+              ▼
+       [チケット購入] (既存 Stripe Checkout)
+              │
+              ▼
+        marketing_attribution.first_paid_at / first_payment_jpy
+```
+
+リードは「first-touch」で流入源を保持し、(LP→Trial CVR), (Trial→Paid CVR), (流入源別 LTV) を analytics ダッシュボードで可視化します。
 
 ## エンドポイント
 

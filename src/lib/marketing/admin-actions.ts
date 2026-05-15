@@ -257,6 +257,9 @@ const LandingPageSchema = z.object({
   cta_url: z.string().url().optional().or(z.literal('')).nullable(),
   body_html: z.string().optional().nullable(),
   sequence_id: z.string().uuid().optional().or(z.literal('')).nullable(),
+  trial_cta_headline: z.string().max(200).optional().nullable(),
+  trial_cta_description: z.string().max(400).optional().nullable(),
+  trial_cta_bullets: z.string().optional().nullable(),
 });
 
 export async function createLandingPage(formData: FormData) {
@@ -273,6 +276,9 @@ export async function createLandingPage(formData: FormData) {
     cta_url: formData.get('cta_url') ?? null,
     body_html: formData.get('body_html') ?? null,
     sequence_id: formData.get('sequence_id') ?? null,
+    trial_cta_headline: formData.get('trial_cta_headline') ?? null,
+    trial_cta_description: formData.get('trial_cta_description') ?? null,
+    trial_cta_bullets: formData.get('trial_cta_bullets') ?? null,
   });
 
   const blocks = [
@@ -292,9 +298,28 @@ export async function createLandingPage(formData: FormData) {
       kind: 'form',
       title: 'メールマガジン購読',
       sequenceId: parsed.sequence_id,
-      submitLabel: '登録する',
+      submitLabel: 'まずは資料を受け取る',
     } as never);
   }
+  // 体験予約 CTA は新規顧客獲得のため常に追加 (生徒数増加が目的)
+  const bullets = parsed.trial_cta_bullets
+    ? parsed.trial_cta_bullets
+        .split(/[\n,]/)
+        .map((b) => b.trim())
+        .filter((b) => b.length > 0)
+    : [
+        'お子様 1 人につき 1 回まで無料',
+        '実際の講師との相性をその場で確認できます',
+        '勧誘は一切ありません',
+      ];
+  blocks.push({
+    kind: 'trial_cta',
+    headline: parsed.trial_cta_headline ?? 'まずは無料体験レッスンから',
+    description:
+      parsed.trial_cta_description ??
+      'Kizashi の講師と実際にレッスンを体験して、お子様に合う先生を見つけてください。',
+    bullets,
+  } as never);
 
   const admin = createSupabaseAdminClient();
   const { error } = await admin.from('marketing_landing_pages').insert({
