@@ -24,6 +24,7 @@ Next.js 14 / TypeScript / Supabase / Stripe / Vercel 構成。
 | P12 | 精算 / 月次処理 (Stripe Connect + balance_transaction) | ✅ 完了 |
 | P13 | 通知 3 チャネル (Resend / LINE / Web Push) | ✅ 完了 |
 | P14 | テスト / セキュリティ強化 / 運用文書 | ✅ 完了 |
+| P15 | マーケティング自動化システム (SNS/LINE/ステップメール/LP/ブログ/アフィリ/広告) | ✅ 完了 (MVP 骨組み) |
 
 ### 規模
 

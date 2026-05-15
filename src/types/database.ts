@@ -464,6 +464,388 @@ interface InstructorsPublicRow {
 }
 
 // =====================================================
+// マーケティング自動化 (Phase 15)
+// =====================================================
+export type MarketingAssetKind = 'image' | 'banner' | 'video' | 'document';
+export type MarketingPostChannel =
+  | 'twitter'
+  | 'instagram'
+  | 'facebook'
+  | 'tiktok'
+  | 'youtube'
+  | 'line';
+export type MarketingPostStatus =
+  | 'draft'
+  | 'scheduled'
+  | 'queued'
+  | 'published'
+  | 'failed'
+  | 'archived';
+export type MarketingSequenceTrigger = 'subscription' | 'tag_added' | 'event' | 'manual';
+export type MarketingEmailStatus = 'pending' | 'queued' | 'sent' | 'failed' | 'unsubscribed';
+export type MarketingSubscriberStatus = 'active' | 'unsubscribed' | 'bounced' | 'complained';
+export type MarketingLpStatus = 'draft' | 'published' | 'archived';
+export type MarketingBlogStatus = 'draft' | 'scheduled' | 'published' | 'archived';
+export type MarketingLineTarget = 'all' | 'segment' | 'tag';
+export type MarketingAdPlatform = 'meta' | 'google' | 'tiktok' | 'yahoo' | 'line_ads' | 'other';
+export type MarketingAdStatus = 'draft' | 'active' | 'paused' | 'completed' | 'archived';
+export type MarketingCampaignObjective =
+  | 'awareness'
+  | 'traffic'
+  | 'lead'
+  | 'conversion'
+  | 'retention';
+
+interface MarketingCampaignsRow {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  objective: MarketingCampaignObjective;
+  start_at: string | null;
+  end_at: string | null;
+  budget_jpy: number;
+  target_audience: Json;
+  is_active: boolean;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface MarketingAssetsRow {
+  id: string;
+  campaign_id: string | null;
+  kind: MarketingAssetKind;
+  title: string;
+  description: string | null;
+  storage_path: string;
+  public_url: string | null;
+  mime_type: string | null;
+  width_px: number | null;
+  height_px: number | null;
+  duration_sec: number | null;
+  file_size_bytes: number | null;
+  tags: string[];
+  ai_prompt: string | null;
+  ai_provider: string | null;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface MarketingSnsPostsRow {
+  id: string;
+  campaign_id: string | null;
+  channel: MarketingPostChannel;
+  body: string;
+  asset_ids: string[];
+  hashtags: string[];
+  scheduled_at: string | null;
+  published_at: string | null;
+  status: MarketingPostStatus;
+  external_post_id: string | null;
+  error_message: string | null;
+  metrics: Json;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface MarketingLineSegmentsRow {
+  id: string;
+  name: string;
+  description: string | null;
+  filter: Json;
+  estimated_size: number;
+  is_active: boolean;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface MarketingLineBroadcastsRow {
+  id: string;
+  campaign_id: string | null;
+  segment_id: string | null;
+  title: string;
+  target_type: MarketingLineTarget;
+  target_tag: string | null;
+  messages: Json;
+  scheduled_at: string | null;
+  sent_at: string | null;
+  status: MarketingPostStatus;
+  sent_count: number;
+  delivered_count: number;
+  failed_count: number;
+  error_message: string | null;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface MarketingLineScenariosRow {
+  id: string;
+  name: string;
+  trigger_keyword: string | null;
+  trigger_event: string | null;
+  steps: Json;
+  is_active: boolean;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface MarketingEmailSequencesRow {
+  id: string;
+  campaign_id: string | null;
+  name: string;
+  description: string | null;
+  trigger: MarketingSequenceTrigger;
+  trigger_tag: string | null;
+  from_name: string;
+  from_email: string;
+  reply_to: string | null;
+  is_active: boolean;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface MarketingEmailSequenceStepsRow {
+  id: string;
+  sequence_id: string;
+  step_order: number;
+  delay_minutes: number;
+  subject: string;
+  body_text: string;
+  body_html: string | null;
+  cta_url: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+interface MarketingEmailSubscribersRow {
+  id: string;
+  email: string;
+  name: string | null;
+  profile_id: string | null;
+  source: string;
+  landing_page_id: string | null;
+  tags: string[];
+  status: MarketingSubscriberStatus;
+  consent_at: string;
+  unsubscribed_at: string | null;
+  metadata: Json;
+  created_at: string;
+  updated_at: string;
+}
+
+interface MarketingEmailEnrollmentsRow {
+  id: string;
+  subscriber_id: string;
+  sequence_id: string;
+  next_step_order: number;
+  next_send_at: string;
+  completed_at: string | null;
+  cancelled_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface MarketingEmailSendsRow {
+  id: string;
+  subscriber_id: string;
+  sequence_id: string | null;
+  step_id: string | null;
+  to_email: string;
+  subject: string;
+  body_text: string;
+  body_html: string | null;
+  status: MarketingEmailStatus;
+  provider_id: string | null;
+  error_message: string | null;
+  opened_at: string | null;
+  clicked_at: string | null;
+  sent_at: string | null;
+  created_at: string;
+}
+
+interface MarketingLandingPagesRow {
+  id: string;
+  campaign_id: string | null;
+  sequence_id: string | null;
+  slug: string;
+  title: string;
+  headline: string;
+  subheadline: string | null;
+  hero_asset_id: string | null;
+  blocks: Json;
+  meta_title: string | null;
+  meta_description: string | null;
+  og_image_url: string | null;
+  status: MarketingLpStatus;
+  publish_at: string | null;
+  unpublish_at: string | null;
+  view_count: number;
+  conversion_count: number;
+  template_key: string | null;
+  ai_prompt: string | null;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface MarketingBlogCategoriesRow {
+  id: string;
+  slug: string;
+  name: string;
+  description: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface MarketingBlogPostsRow {
+  id: string;
+  campaign_id: string | null;
+  category_id: string | null;
+  slug: string;
+  title: string;
+  excerpt: string | null;
+  body_markdown: string;
+  body_html: string | null;
+  hero_asset_id: string | null;
+  tags: string[];
+  meta_title: string | null;
+  meta_description: string | null;
+  og_image_url: string | null;
+  status: MarketingBlogStatus;
+  publish_at: string | null;
+  published_at: string | null;
+  view_count: number;
+  reading_minutes: number | null;
+  author_profile_id: string | null;
+  author_display_name: string | null;
+  ai_prompt: string | null;
+  ai_model: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface MarketingAffiliateProgramsRow {
+  id: string;
+  name: string;
+  network: string;
+  program_id: string | null;
+  base_url: string;
+  default_commission_jpy: number | null;
+  default_commission_rate: number | null;
+  notes: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+interface MarketingAffiliateLinksRow {
+  id: string;
+  program_id: string | null;
+  blog_post_id: string | null;
+  campaign_id: string | null;
+  code: string;
+  target_url: string;
+  label: string | null;
+  utm_source: string | null;
+  utm_medium: string | null;
+  utm_campaign: string | null;
+  utm_content: string | null;
+  is_active: boolean;
+  click_count: number;
+  conversion_count: number;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface MarketingAffiliateClicksRow {
+  id: string;
+  link_id: string;
+  ip_hash: string | null;
+  user_agent: string | null;
+  referrer: string | null;
+  country: string | null;
+  device: string | null;
+  clicked_at: string;
+}
+
+interface MarketingAffiliateConversionsRow {
+  id: string;
+  link_id: string | null;
+  program_id: string | null;
+  external_order_id: string | null;
+  commission_jpy: number;
+  status: string;
+  raw_payload: Json;
+  converted_at: string;
+  confirmed_at: string | null;
+}
+
+interface MarketingAdCampaignsRow {
+  id: string;
+  campaign_id: string | null;
+  landing_page_id: string | null;
+  platform: MarketingAdPlatform;
+  external_id: string | null;
+  name: string;
+  objective: string | null;
+  daily_budget_jpy: number;
+  total_budget_jpy: number;
+  status: MarketingAdStatus;
+  start_at: string | null;
+  end_at: string | null;
+  target_audience: Json;
+  creative_asset_ids: string[];
+  notes: string | null;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface MarketingAdMetricsDailyRow {
+  id: string;
+  ad_campaign_id: string;
+  date: string;
+  impressions: number;
+  clicks: number;
+  conversions: number;
+  spend_jpy: number;
+  revenue_jpy: number;
+  raw_payload: Json;
+  fetched_at: string;
+}
+
+interface MarketingAnalyticsEventsRow {
+  id: string;
+  event_name: string;
+  campaign_id: string | null;
+  landing_page_id: string | null;
+  blog_post_id: string | null;
+  sns_post_id: string | null;
+  affiliate_link_id: string | null;
+  subscriber_id: string | null;
+  profile_id: string | null;
+  session_id: string | null;
+  ip_hash: string | null;
+  user_agent: string | null;
+  referrer: string | null;
+  utm_source: string | null;
+  utm_medium: string | null;
+  utm_campaign: string | null;
+  utm_content: string | null;
+  properties: Json;
+  created_at: string;
+}
+
+// =====================================================
 // Database 型エクスポート
 // =====================================================
 type WithBase<T> = {
@@ -503,6 +885,27 @@ export interface Database {
       push_subscriptions: WithBase<PushSubscriptionsRow>;
       push_notification_logs: WithBase<PushNotificationLogsRow>;
       system_settings: WithBase<SystemSettingsRow>;
+      marketing_campaigns: WithBase<MarketingCampaignsRow>;
+      marketing_assets: WithBase<MarketingAssetsRow>;
+      marketing_sns_posts: WithBase<MarketingSnsPostsRow>;
+      marketing_line_segments: WithBase<MarketingLineSegmentsRow>;
+      marketing_line_broadcasts: WithBase<MarketingLineBroadcastsRow>;
+      marketing_line_scenarios: WithBase<MarketingLineScenariosRow>;
+      marketing_email_sequences: WithBase<MarketingEmailSequencesRow>;
+      marketing_email_sequence_steps: WithBase<MarketingEmailSequenceStepsRow>;
+      marketing_email_subscribers: WithBase<MarketingEmailSubscribersRow>;
+      marketing_email_enrollments: WithBase<MarketingEmailEnrollmentsRow>;
+      marketing_email_sends: WithBase<MarketingEmailSendsRow>;
+      marketing_landing_pages: WithBase<MarketingLandingPagesRow>;
+      marketing_blog_categories: WithBase<MarketingBlogCategoriesRow>;
+      marketing_blog_posts: WithBase<MarketingBlogPostsRow>;
+      marketing_affiliate_programs: WithBase<MarketingAffiliateProgramsRow>;
+      marketing_affiliate_links: WithBase<MarketingAffiliateLinksRow>;
+      marketing_affiliate_clicks: WithBase<MarketingAffiliateClicksRow>;
+      marketing_affiliate_conversions: WithBase<MarketingAffiliateConversionsRow>;
+      marketing_ad_campaigns: WithBase<MarketingAdCampaignsRow>;
+      marketing_ad_metrics_daily: WithBase<MarketingAdMetricsDailyRow>;
+      marketing_analytics_events: WithBase<MarketingAnalyticsEventsRow>;
     };
     Views: {
       instructors_public: {
@@ -644,6 +1047,23 @@ export interface Database {
           p_stripe_transfer_id: string;
           p_stripe_payout_id?: string | null;
         };
+        Returns: void;
+      };
+      fn_record_affiliate_click: {
+        Args: {
+          p_link_id: string;
+          p_ip_hash: string | null;
+          p_user_agent: string | null;
+          p_referrer: string | null;
+        };
+        Returns: void;
+      };
+      fn_increment_landing_page_view: {
+        Args: { p_lp_id: string };
+        Returns: void;
+      };
+      fn_increment_blog_view: {
+        Args: { p_blog_id: string };
         Returns: void;
       };
     };

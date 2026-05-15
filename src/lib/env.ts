@@ -52,6 +52,20 @@ const ServerEnvSchema = z.object({
   // App
   APP_URL: z.string().url(),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+
+  // マーケティング自動化 (Phase 15) - 全て optional
+  TWITTER_BEARER_TOKEN: z.string().min(1).optional(),
+  META_PAGE_ACCESS_TOKEN: z.string().min(1).optional(),
+  META_PAGE_ID: z.string().min(1).optional(),
+  META_IG_USER_ID: z.string().min(1).optional(),
+  TIKTOK_ACCESS_TOKEN: z.string().min(1).optional(),
+  YOUTUBE_ACCESS_TOKEN: z.string().min(1).optional(),
+  META_AD_ACCESS_TOKEN: z.string().min(1).optional(),
+  META_AD_ACCOUNT_ID: z.string().min(1).optional(),
+  GOOGLE_ADS_DEVELOPER_TOKEN: z.string().min(1).optional(),
+  GOOGLE_ADS_CUSTOMER_ID: z.string().min(1).optional(),
+  TIKTOK_ADS_ACCESS_TOKEN: z.string().min(1).optional(),
+  AFFILIATE_WEBHOOK_SECRET: z.string().min(1).optional(),
 });
 
 export type ServerEnv = z.infer<typeof ServerEnvSchema>;

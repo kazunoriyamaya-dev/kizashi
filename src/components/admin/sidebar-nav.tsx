@@ -14,6 +14,7 @@ import {
   Banknote,
   Settings,
   Sparkles,
+  Megaphone,
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -24,6 +25,7 @@ const NAV_ITEMS = [
   { href: '/admin/instructors', label: '講師管理', Icon: GraduationCap },
   { href: '/admin/tickets', label: 'チケット管理', Icon: Ticket },
   { href: '/admin/messages', label: 'メッセージ', Icon: MessageSquare },
+  { href: '/admin/marketing', label: 'マーケティング', Icon: Megaphone },
   { href: '/admin/policies/cancel', label: 'ポリシー設定', Icon: ScrollText },
   { href: '/admin/payouts', label: '精算管理', Icon: Banknote },
   { href: '/admin/settings', label: 'システム設定', Icon: Settings },
