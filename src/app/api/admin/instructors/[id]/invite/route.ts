@@ -18,10 +18,7 @@ import { logger } from '@/lib/logger';
 
 const ParamsSchema = z.object({ id: z.string().uuid() });
 
-export async function POST(
-  _request: NextRequest,
-  { params }: { params: { id: string } },
-) {
+export async function POST(_request: NextRequest, { params }: { params: { id: string } }) {
   // 認可チェック
   const me = await getCurrentUser();
   if (!me || me.role !== 'admin') {

@@ -6,6 +6,7 @@
 ## 1. 実装した内容
 
 ### プロジェクト初期化（Next.js 14 / TypeScript）
+
 - `package.json` に Next.js 14.2 / React 18.3 / Supabase / Stripe / Google APIs / LINE / web-push / Resend / shadcn/ui 関連の依存を定義
 - `tsconfig.json`（strict、noUncheckedIndexedAccess、`@/*` パス、isolatedModules）
 - `next.config.mjs`（セキュリティヘッダ、Image remotePatterns、Server Actions 設定）
@@ -13,6 +14,7 @@
 - `postcss.config.mjs`、`components.json`（shadcn/ui 設定）
 
 ### 開発ツール設定
+
 - ESLint（`.eslintrc.json`）：
   - `@/lib/supabase/admin` のクライアントからの import を `no-restricted-imports` で禁止
   - `console.log` を `no-restricted-syntax` で警告
@@ -22,7 +24,8 @@
   - `cn` `clsx` `cva` 関数内のクラスを認識
 
 ### 環境変数テンプレート
-- `.env.example` に設計書 06_環境_GitHub の14変数 + Phase別の追加変数を網羅：
+
+- `.env.example` に設計書 06\_環境\_GitHub の14変数 + Phase別の追加変数を網羅：
   - Supabase 4変数（URL/anon/service_role/database_url）
   - Stripe 5変数（pk/sk/webhook_secret/connect_webhook_secret/connect_client_id）
   - Google 3変数（client_id/secret/maps_api_key）
@@ -33,6 +36,7 @@
   - その他（CRON_SECRET、ADMIN_BOOTSTRAP_TOKEN、APP_URL、NODE_ENV）
 
 ### App Router ディレクトリ構造
+
 - Route Group 分離: `(auth)` / `(admin)` / `(instructor)` / `(customer)`
 - 各ロール専用 Layout（管理者・講師: PC、顧客: スマホファースト max-w-md）
 - Phase 別プレースホルダー Page を配置（A002, I002, C002, C001 ログイン）
@@ -41,6 +45,7 @@
 - `middleware.ts` プレースホルダー（Phase 2 で本格実装）
 
 ### lib/ ドメインモジュールスケルトン
+
 - `supabase/{client,server,admin}.ts` — 3種クライアント分離。admin はクライアント側 import 不可
 - `env.ts` — Zod による環境変数バリデーション（Phase 0 は警告のみ、Phase 2 で必須化）
 - `logger/index.ts` — PII 自動マスク（email/phone/name/address/birth_date/access_token 等）
@@ -55,10 +60,12 @@
 - `utils.ts` — `cn` / `formatJPY` / `calcCarFare`（往復・小数点切り上げ）
 
 ### 型定義
+
 - `src/types/database.ts` — Supabase 自動生成型のプレースホルダー（Phase 1 で `pnpm gen:types`）
 - `src/types/index.ts` — 共通ドメイン型 + `INSTRUCTOR_DESIGNATION_FEES`（Q023）/ `CATEGORY_LABELS` / `RANK_LABELS`
 
 ### ドキュメント
+
 - `README.md` — セットアップ手順、ディレクトリ構成、スクリプト、セキュリティポリシー
 - `docs/00_実装方針_QA反映版.md` — QA 回答（Q001 ペアレッスン、Q013 1時間前無料キャンセル、Q023 講師ランク指名料）反映済み
 - `docs/Phase0_完了報告.md` — 本文書
@@ -66,11 +73,13 @@
 ## 2. 変更したファイル一覧（41ファイル）
 
 ### ルート（10）
+
 - `package.json` / `tsconfig.json` / `next.config.mjs` / `tailwind.config.ts` / `postcss.config.mjs`
 - `components.json` / `.eslintrc.json` / `.prettierrc.json` / `.prettierignore` / `.gitignore`
 - `.env.example` / `README.md`
 
 ### App Router（11）
+
 - `src/middleware.ts`
 - `src/app/layout.tsx` / `page.tsx` / `error.tsx` / `not-found.tsx` / `globals.css`
 - `src/app/(auth)/login/page.tsx`
@@ -79,6 +88,7 @@
 - `src/app/(customer)/layout.tsx` / `mypage/page.tsx`
 
 ### lib（13）
+
 - `src/lib/utils.ts` / `env.ts`
 - `src/lib/auth/index.ts`
 - `src/lib/encryption/index.ts`
@@ -91,14 +101,17 @@
 - `src/lib/supabase/{admin,client,server}.ts`
 
 ### types（2）
+
 - `src/types/database.ts` / `index.ts`
 
 ### docs（2）
+
 - `docs/00_実装方針_QA反映版.md` / `Phase0_完了報告.md`
 
 ## 3. 未実装の内容
 
 Phase 0 の範囲外（後続フェーズで実装）：
+
 - 認証・セッション管理（Phase 2）
 - DB マイグレーション・RLS（Phase 1）
 - Supabase 自動生成型（Phase 1）
@@ -108,6 +121,7 @@ Phase 0 の範囲外（後続フェーズで実装）：
 - E2E テスト基盤（Phase 14）
 
 Phase 0 のスコープ外として意図的に未実装：
+
 - Vercel Cron 設定 (`vercel.json`) — Phase 13 で追加
 - Stripe Webhook ハンドラ — Phase 7
 - 講師招待トークンの HMAC 実装 — Phase 2
@@ -182,6 +196,7 @@ pnpm format:check
 ```
 
 ### 確認観点
+
 - [ ] `pnpm dev` がエラーなく起動する
 - [ ] http://localhost:3000 がレンダリングされる
 - [ ] 各 Route Group のレイアウトが切り替わる（管理者: グレー背景、顧客: max-w-md）
@@ -192,12 +207,15 @@ pnpm format:check
 ## 6. リスク・注意事項
 
 ### Phase 1 への引き継ぎリスク
+
 1. **Supabase CLI バージョン**: `package.json` で `supabase: ^2.6.8` を指定。最新版でマイグレーションシンタックスが変わる可能性。
 2. **EXCLUDE 制約の拡張機能**: `btree_gist` を有効化する `CREATE EXTENSION` を Phase 1 のマイグレーション初頭に入れる必要あり。
 3. **`.vscode/settings.json`**: 当環境の制約で配置できなかった。実環境で必要であればリポジトリ側で追加する。
 
 ### 設計書差分の取り扱い
+
 QA 回答により以下が確定したことを `docs/00_実装方針_QA反映版.md` に記載：
+
 - Q001 ペアレッスンを MVP に含める（チケット `lesson_format`、予約 `pair_participants`）
 - Q013 1時間前まで無料キャンセル（`cancel_policies.free_cancel_minutes_before_start`）
 - Q023 講師ランク別指名料（Gold ¥1,500 / Silver ¥1,000 / Bronze ¥500 / Regular ¥0）

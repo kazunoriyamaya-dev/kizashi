@@ -135,7 +135,8 @@ export default async function CancelReservationPage({
 
       {!evaluation.allowed ? (
         <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
-          開始時刻を過ぎているため、Web からのキャンセルはできません。サポートにお問い合わせください。
+          開始時刻を過ぎているため、Web
+          からのキャンセルはできません。サポートにお問い合わせください。
         </div>
       ) : (
         <form action={cancelOwnReservationAction.bind(null, params.id)} className="space-y-3">

@@ -13,10 +13,7 @@ const BodySchema = z.object({
   body: z.string().min(1).max(5000),
 });
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { threadId: string } },
-) {
+export async function POST(request: NextRequest, { params }: { params: { threadId: string } }) {
   const me = await getCurrentUser();
   if (!me) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
 

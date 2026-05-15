@@ -18,13 +18,15 @@ interface InstructorCardProps {
   designationFee: number;
 }
 
-const RANK_VARIANT: Record<InstructorRank, 'rankGold' | 'rankSilver' | 'rankBronze' | 'rankRegular'> =
-  {
-    gold: 'rankGold',
-    silver: 'rankSilver',
-    bronze: 'rankBronze',
-    regular: 'rankRegular',
-  };
+const RANK_VARIANT: Record<
+  InstructorRank,
+  'rankGold' | 'rankSilver' | 'rankBronze' | 'rankRegular'
+> = {
+  gold: 'rankGold',
+  silver: 'rankSilver',
+  bronze: 'rankBronze',
+  regular: 'rankRegular',
+};
 
 export function InstructorCard({ instructor, designationFee }: InstructorCardProps) {
   const initials = instructor.nickname.slice(0, 2);
@@ -33,15 +35,15 @@ export function InstructorCard({ instructor, designationFee }: InstructorCardPro
       <Card className="transition-shadow hover:shadow-md">
         <CardContent className="flex gap-4 p-4">
           <Avatar className="h-16 w-16 shrink-0">
-            {instructor.avatar_url && <AvatarImage src={instructor.avatar_url} alt={instructor.nickname} />}
+            {instructor.avatar_url && (
+              <AvatarImage src={instructor.avatar_url} alt={instructor.nickname} />
+            )}
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <h3 className="font-semibold">{instructor.nickname}先生</h3>
-              <Badge variant={RANK_VARIANT[instructor.rank]}>
-                {RANK_LABELS[instructor.rank]}
-              </Badge>
+              <Badge variant={RANK_VARIANT[instructor.rank]}>{RANK_LABELS[instructor.rank]}</Badge>
             </div>
             <div className="mt-1.5 flex flex-wrap gap-1">
               {instructor.categories?.map((c) => (

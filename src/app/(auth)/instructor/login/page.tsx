@@ -44,13 +44,7 @@ export default async function InstructorLoginPage({
             )}
             <div className="space-y-2">
               <Label htmlFor="email">メールアドレス</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                required
-                autoComplete="username"
-              />
+              <Input id="email" name="email" type="email" required autoComplete="username" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">パスワード</Label>

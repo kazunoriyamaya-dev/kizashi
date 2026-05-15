@@ -94,25 +94,16 @@ export function LandingPageSubscribeForm({
         <Input id="lp-name" value={name} onChange={(e) => setName(e.target.value)} />
       </div>
       <label className="flex items-center gap-2 text-xs text-muted-foreground sm:col-span-2">
-        <input
-          type="checkbox"
-          checked={agreed}
-          onChange={(e) => setAgreed(e.target.checked)}
-        />
+        <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
         プライバシーポリシーに同意します
       </label>
-      {error && (
-        <p className="text-sm text-destructive sm:col-span-2">{error}</p>
-      )}
+      {error && <p className="text-sm text-destructive sm:col-span-2">{error}</p>}
       <div className="flex flex-wrap items-center gap-3 sm:col-span-2">
         <Button type="submit" disabled={state === 'loading'}>
           {state === 'loading' ? '送信中…' : (submitLabel ?? '送信')}
         </Button>
         {trialCtaUrl && (
-          <a
-            href={trialCtaUrl}
-            className="text-sm text-primary underline hover:text-primary/80"
-          >
+          <a href={trialCtaUrl} className="text-sm text-primary underline hover:text-primary/80">
             すぐに無料体験を予約したい方はこちら →
           </a>
         )}

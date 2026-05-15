@@ -51,9 +51,7 @@ export default async function InstructorProfilePage({
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">プロフィール</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            公開情報・自宅住所・インボイス番号
-          </p>
+          <p className="mt-1 text-sm text-muted-foreground">公開情報・自宅住所・インボイス番号</p>
         </div>
         <Button asChild>
           <Link href="/instructor/profile/edit">編集</Link>
@@ -103,7 +101,10 @@ export default async function InstructorProfilePage({
                 </div>
               }
             />
-            <Row label="ジャンル" value={(instructor.genres as string[] | null)?.join(', ') || '–'} />
+            <Row
+              label="ジャンル"
+              value={(instructor.genres as string[] | null)?.join(', ') || '–'}
+            />
             <Row
               label="移動手段"
               value={instructor.transportation_mode === 'car' ? '車（30円/km）' : '電車'}
@@ -155,7 +156,9 @@ export default async function InstructorProfilePage({
               label="登録日"
               value={
                 instructor.invoice_settings?.[0]?.registered_at
-                  ? new Date(instructor.invoice_settings[0].registered_at).toLocaleDateString('ja-JP')
+                  ? new Date(instructor.invoice_settings[0].registered_at).toLocaleDateString(
+                      'ja-JP',
+                    )
                   : '–'
               }
             />

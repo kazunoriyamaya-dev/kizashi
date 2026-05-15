@@ -54,10 +54,9 @@ export async function GET(request: NextRequest) {
   }
 
   // requested redirect_to がそのロールの領域内なら使う、そうでなければ既定画面へ
-  const target =
-    requestedRedirect.startsWith(defaultPathForRole(profile.role))
-      ? requestedRedirect
-      : defaultPathForRole(profile.role);
+  const target = requestedRedirect.startsWith(defaultPathForRole(profile.role))
+    ? requestedRedirect
+    : defaultPathForRole(profile.role);
 
   return NextResponse.redirect(new URL(target, request.url));
 }

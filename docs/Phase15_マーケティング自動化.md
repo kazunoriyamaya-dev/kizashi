@@ -17,26 +17,26 @@ Kizashi 予約管理に追加した **マーケティング自動化システム
 
 ## アクセス制御
 
-| ロール | アクセス |
-|---|---|
-| admin | `/admin/marketing/*` 全機能。`(admin)` layout + marketing layout の二重防御で `requireRole('admin')` |
-| anon (見込み顧客) | `/lp/[slug]`, `/blog`, `/blog/[slug]`, `/r/[code]`, `/api/marketing/{subscribe,track}` のみ |
-| 講師 / 既存顧客 | 管理 UI は閲覧不可。middleware でロール不一致リダイレクト |
-| service_role | cron / webhook のみ |
+| ロール            | アクセス                                                                                             |
+| ----------------- | ---------------------------------------------------------------------------------------------------- |
+| admin             | `/admin/marketing/*` 全機能。`(admin)` layout + marketing layout の二重防御で `requireRole('admin')` |
+| anon (見込み顧客) | `/lp/[slug]`, `/blog`, `/blog/[slug]`, `/r/[code]`, `/api/marketing/{subscribe,track}` のみ          |
+| 講師 / 既存顧客   | 管理 UI は閲覧不可。middleware でロール不一致リダイレクト                                            |
+| service_role      | cron / webhook のみ                                                                                  |
 
 middleware の PUBLIC_PATHS にマーケ公開パスを明示 (`/lp`, `/blog`, `/r`, `/api/marketing/*`)。
 
 ## 提供範囲 (Q025 反映)
 
-| 領域 | 実装内容 | 外部連携 |
-|---|---|---|
-| 1. SNS 画像 / バナー / 投稿 / 動画 | `marketing_assets` ライブラリ + `marketing_sns_posts` 予約投稿 + cron publisher (X / Meta / TikTok / YouTube) | `TWITTER_BEARER_TOKEN`, `META_PAGE_ACCESS_TOKEN`, `META_IG_USER_ID`, `META_PAGE_ID`, `TIKTOK_ACCESS_TOKEN`, `YOUTUBE_ACCESS_TOKEN` |
-| 2. 公式 LINE 運用 / 自動化 | `marketing_line_segments` + `marketing_line_broadcasts` (broadcast / narrowcast) + `marketing_line_scenarios` | 既存 `LINE_CHANNEL_ACCESS_TOKEN` を流用 |
-| 3. ステップメール | `marketing_email_sequences` / `_sequence_steps` / `_subscribers` / `_enrollments` / `_sends` + cron dispatcher (Resend) + `{{name}} {{email}}` 差し込み | 既存 `RESEND_API_KEY` を流用 |
-| 4. LP 自動作成 / 配信 + 広告運用 | `marketing_landing_pages` (blocks JSON) + `/lp/[slug]` 公開ページ + cron 自動公開 / 取下げ + LP→シーケンス自動エンロール | - |
-| 5. HP CMS ブログ自動作成 / 配信 | `marketing_blog_posts` (Markdown + HTML キャッシュ) + `/blog` 一覧 + `/blog/[slug]` 記事 + cron 予約公開 + 自前 Markdown レンダラ (XSS 対策済み) | AI 生成は `ai_prompt` / `ai_model` メタを記録 |
-| 6. アフィリエイト連携 | `marketing_affiliate_programs` + `_links` (短縮 code) + `_clicks` + `_conversions` + `/r/[code]` UTM 付き 302 リダイレクト + ASP postback webhook `/api/marketing/affiliate-webhook/[network]` | `AFFILIATE_WEBHOOK_SECRET` (Bearer / `?secret=`) |
-| 7. 広告運用 + 分析 | `marketing_ad_campaigns` + `marketing_ad_metrics_daily` + cron `marketing-ad-sync` + 横断 `marketing_analytics_events` + `/admin/marketing/analytics` ダッシュボード | `META_AD_ACCESS_TOKEN`, `GOOGLE_ADS_DEVELOPER_TOKEN`, `TIKTOK_ADS_ACCESS_TOKEN` |
+| 領域                               | 実装内容                                                                                                                                                                                       | 外部連携                                                                                                                           |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| 1. SNS 画像 / バナー / 投稿 / 動画 | `marketing_assets` ライブラリ + `marketing_sns_posts` 予約投稿 + cron publisher (X / Meta / TikTok / YouTube)                                                                                  | `TWITTER_BEARER_TOKEN`, `META_PAGE_ACCESS_TOKEN`, `META_IG_USER_ID`, `META_PAGE_ID`, `TIKTOK_ACCESS_TOKEN`, `YOUTUBE_ACCESS_TOKEN` |
+| 2. 公式 LINE 運用 / 自動化         | `marketing_line_segments` + `marketing_line_broadcasts` (broadcast / narrowcast) + `marketing_line_scenarios`                                                                                  | 既存 `LINE_CHANNEL_ACCESS_TOKEN` を流用                                                                                            |
+| 3. ステップメール                  | `marketing_email_sequences` / `_sequence_steps` / `_subscribers` / `_enrollments` / `_sends` + cron dispatcher (Resend) + `{{name}} {{email}}` 差し込み                                        | 既存 `RESEND_API_KEY` を流用                                                                                                       |
+| 4. LP 自動作成 / 配信 + 広告運用   | `marketing_landing_pages` (blocks JSON) + `/lp/[slug]` 公開ページ + cron 自動公開 / 取下げ + LP→シーケンス自動エンロール                                                                       | -                                                                                                                                  |
+| 5. HP CMS ブログ自動作成 / 配信    | `marketing_blog_posts` (Markdown + HTML キャッシュ) + `/blog` 一覧 + `/blog/[slug]` 記事 + cron 予約公開 + 自前 Markdown レンダラ (XSS 対策済み)                                               | AI 生成は `ai_prompt` / `ai_model` メタを記録                                                                                      |
+| 6. アフィリエイト連携              | `marketing_affiliate_programs` + `_links` (短縮 code) + `_clicks` + `_conversions` + `/r/[code]` UTM 付き 302 リダイレクト + ASP postback webhook `/api/marketing/affiliate-webhook/[network]` | `AFFILIATE_WEBHOOK_SECRET` (Bearer / `?secret=`)                                                                                   |
+| 7. 広告運用 + 分析                 | `marketing_ad_campaigns` + `marketing_ad_metrics_daily` + cron `marketing-ad-sync` + 横断 `marketing_analytics_events` + `/admin/marketing/analytics` ダッシュボード                           | `META_AD_ACCESS_TOKEN`, `GOOGLE_ADS_DEVELOPER_TOKEN`, `TIKTOK_ADS_ACCESS_TOKEN`                                                    |
 
 ## アーキテクチャ
 
@@ -69,9 +69,11 @@ middleware の PUBLIC_PATHS にマーケ公開パスを明示 (`/lp`, `/blog`, `
 `supabase/migrations/20260515000001_marketing_system.sql` (1 マイグレーション、約 21 テーブル + 3 RPC)。
 
 ### enum
+
 `marketing_asset_kind`, `marketing_post_channel`, `marketing_post_status`, `marketing_sequence_trigger`, `marketing_email_status`, `marketing_subscriber_status`, `marketing_lp_status`, `marketing_blog_status`, `marketing_line_target`, `marketing_ad_platform`, `marketing_ad_status`, `marketing_campaign_objective`
 
 ### テーブル一覧
+
 - `marketing_campaigns` — マーケ施策の上位概念
 - `marketing_assets` — 画像 / バナー / 動画 / 資料 ライブラリ
 - `marketing_sns_posts` — SNS 各 ch への予約投稿
@@ -85,12 +87,14 @@ middleware の PUBLIC_PATHS にマーケ公開パスを明示 (`/lp`, `/blog`, `
 - `marketing_attribution` — **新規顧客獲得ファネル** (lead → trial → customer → paid、流入源を first-touch で保持)
 
 ### RLS
+
 - 全テーブルに `admin all access` ポリシー。
 - `marketing_landing_pages` / `marketing_blog_posts` は `published` のみ anon select 可。
 - `marketing_affiliate_links` (is_active) は anon select 可 (`/r/[code]` 用)。
 - それ以外は admin / service_role からのみアクセス。
 
 ### RPC
+
 - `fn_record_affiliate_click(p_link_id, p_ip_hash, p_user_agent, p_referrer)` — atomic クリック記録 + counter インクリメント
 - `fn_increment_landing_page_view(p_lp_id)` — LP PV カウンタ
 - `fn_increment_blog_view(p_blog_id)` — ブログ PV カウンタ
@@ -133,6 +137,7 @@ SNS / 広告 / アフィリエイト
 ## エンドポイント
 
 ### Admin UI (`/admin/marketing/*`)
+
 - `/` — ダッシュボード (KPI)
 - `/campaigns` — キャンペーン CRUD
 - `/assets` — アセット登録 (Supabase Storage パス + AI メタ)
@@ -147,16 +152,18 @@ SNS / 広告 / アフィリエイト
 - `/analytics` — イベント / クリック / メール集計
 
 ### 公開ページ
+
 - `/lp/[slug]` — LP (blocks 解釈 + hero/feature/testimonial/faq/cta/form/rich_text)
 - `/blog` — ブログ一覧
 - `/blog/[slug]` — 記事
 - `/r/[code]` — アフィリエイト UTM 付き 302 リダイレクト
 
 ### API
+
 - `POST /api/marketing/subscribe` — LP 購読フォーム
 - `POST /api/marketing/track` — 汎用イベント収集
 - `POST /api/marketing/affiliate-webhook/[network]` — ASP postback (Bearer 認証)
-- `GET /api/cron/marketing-dispatch` — */10 min (SNS / LINE / step mail / LP 公開 / ブログ公開)
+- `GET /api/cron/marketing-dispatch` — \*/10 min (SNS / LINE / step mail / LP 公開 / ブログ公開)
 - `GET /api/cron/marketing-ad-sync` — 04:00 (前日の広告メトリクスを各 platform から取得)
 
 ## cron 設定 (`vercel.json`)
@@ -203,14 +210,14 @@ LINE / Resend / Supabase は既存環境変数を流用。
 
 ## 拡張ポイント
 
-| 機能 | 拡張方法 |
-|---|---|
-| 画像 AI 自動生成 | `src/lib/marketing/sns/publishers.ts` の各 publisher を、Anthropic Files / OpenAI Images / Canva API などで動的に画像生成して投稿するよう拡張 |
-| 動画自動生成 | アセット種別 `video` に対し Runway / Sora / Pictory API の生成結果を `storage_path` / `public_url` で登録 |
-| LP テンプレ自動生成 | `marketing_landing_pages.template_key` + `ai_prompt` から AI で blocks を生成 (Server Action 追加) |
-| ブログ AI 執筆 | `/admin/marketing/blog` の Markdown 入力欄に AI 生成結果を貼り付け。`ai_prompt` / `ai_model` をメタ保存 |
-| アフィリエイト ASP 詳細連携 | `/api/marketing/affiliate-webhook/[network]` を ASP 別ハンドラに分岐 (A8 / valuecommerce / Amazon の署名検証を追加) |
-| 広告自動最適化 | `marketing_ad_metrics_daily` を読み込んで budget 自動調整 / 入札変更を Server Action 化 |
+| 機能                        | 拡張方法                                                                                                                                      |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| 画像 AI 自動生成            | `src/lib/marketing/sns/publishers.ts` の各 publisher を、Anthropic Files / OpenAI Images / Canva API などで動的に画像生成して投稿するよう拡張 |
+| 動画自動生成                | アセット種別 `video` に対し Runway / Sora / Pictory API の生成結果を `storage_path` / `public_url` で登録                                     |
+| LP テンプレ自動生成         | `marketing_landing_pages.template_key` + `ai_prompt` から AI で blocks を生成 (Server Action 追加)                                            |
+| ブログ AI 執筆              | `/admin/marketing/blog` の Markdown 入力欄に AI 生成結果を貼り付け。`ai_prompt` / `ai_model` をメタ保存                                       |
+| アフィリエイト ASP 詳細連携 | `/api/marketing/affiliate-webhook/[network]` を ASP 別ハンドラに分岐 (A8 / valuecommerce / Amazon の署名検証を追加)                           |
+| 広告自動最適化              | `marketing_ad_metrics_daily` を読み込んで budget 自動調整 / 入札変更を Server Action 化                                                       |
 
 ## 動作確認
 

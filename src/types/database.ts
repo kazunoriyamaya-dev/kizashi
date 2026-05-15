@@ -951,7 +951,10 @@ export interface Database {
       fn_is_customer: { Args: Record<string, never>; Returns: boolean };
       fn_current_customer_id: { Args: Record<string, never>; Returns: string | null };
       fn_current_instructor_id: { Args: Record<string, never>; Returns: string | null };
-      fn_sweep_expired_tickets: { Args: Record<string, never>; Returns: { updated_count: number }[] };
+      fn_sweep_expired_tickets: {
+        Args: Record<string, never>;
+        Returns: { updated_count: number }[];
+      };
       fn_close_used_tickets: { Args: Record<string, never>; Returns: void };
       fn_find_trial_duplicates: {
         Args: { p_name: string; p_kana: string; p_birth_date: string };

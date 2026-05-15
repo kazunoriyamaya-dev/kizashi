@@ -3,10 +3,7 @@
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { getCurrentUser } from '@/lib/auth';
-import {
-  recordTravelFeeForReservation,
-  setManualTravelFee,
-} from '@/lib/reservations/travel-fee';
+import { recordTravelFeeForReservation, setManualTravelFee } from '@/lib/reservations/travel-fee';
 
 /**
  * 管理者: 交通費を手動入力 (Q008/Q009)

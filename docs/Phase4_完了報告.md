@@ -6,6 +6,7 @@
 ## 1. 実装した内容
 
 ### 1.1 Google OAuth 2.0 ヘルパー (`lib/google/oauth.ts`)
+
 - `buildCalendarAuthorizationUrl`: 認可 URL 生成（access_type=offline + prompt=consent で refresh_token 確実取得）
 - `exchangeCodeForGoogleTokens`: code → access_token/refresh_token/id_token 交換
 - `refreshGoogleAccessToken`: refresh_token で access_token を更新
@@ -13,6 +14,7 @@
 - スコープ: `calendar.events` + `calendar.readonly` + `userinfo.email`
 
 ### 1.2 Google Calendar API ラッパー (`lib/google/calendar.ts`)
+
 - `getValidAccessToken(instructorId)`: DB から取得した access_token が期限切れなら自動 refresh + 暗号化保存
 - `getFreeBusyForInstructor`: freeBusy.query で busy 期間を返す
 - `createCalendarEvent`: events.insert + conferenceData で **Google Meet URL 自動発行 (Q006)**
@@ -21,6 +23,7 @@
 - 全関数で AES-GCM 暗号化された refresh_token を `decrypt()` してから使用、リフレッシュ後は `encrypt()` で再保存
 
 ### 1.3 講師 Calendar OAuth API (Route Handlers)
+
 - `GET /api/instructor/google-calendar/auth-url` (API012):
   - state を HttpOnly cookie に保存
   - 講師の `contact_email` を `login_hint` に渡す
@@ -36,6 +39,7 @@
   - audit_logs に `instructor.calendar_disconnected` 記録
 
 ### 1.4 空き枠取得関数 (`lib/reservations/availability.ts`)
+
 - `fetchAvailableSlots({ instructorId, fromIso, toIso, durationMin, deliveryType, stepMin })`:
   1. `system_settings` から営業時間・バッファ・予約受付窓を取得
   2. Google Calendar の Free/Busy を取得（連携失敗時は DB のみで継続）
@@ -46,6 +50,7 @@
 - `reservation_window_days`（既定 30 日）でレンジ制限
 
 ### 1.5 講師プロフィール更新 (Validators / Server Actions)
+
 - `lib/validators/instructor-self.ts`:
   - 講師自身が編集可能な範囲のみ Zod スキーマ化
   - **編集不可（admin のみ）**: `real_name` `real_name_kana` `rank` `priority` `status` `contact_email`（Q018 / Q023）
@@ -57,20 +62,23 @@
   - `disconnectCalendarAction`: API 内部呼び出しのラッパー
 
 ### 1.6 講師画面 5ページ
-| 画面ID | URL | 内容 |
-|---|---|---|
-| I002 | `/instructor` | 担当予約一覧（今後 / 過去） |
-| I003 | `/instructor/reservations/[id]` | 予約詳細（顧客名・形式・場所・交通費・Meet URL） |
-| I004 | `/instructor/profile` | 自身のプロフィール表示 |
-| I005 | `/instructor/profile/edit` | 編集 + インボイス登録番号 |
-| I006 | `/instructor/calendar` | Calendar 連携状態と連携/解除ボタン |
+
+| 画面ID | URL                             | 内容                                             |
+| ------ | ------------------------------- | ------------------------------------------------ |
+| I002   | `/instructor`                   | 担当予約一覧（今後 / 過去）                      |
+| I003   | `/instructor/reservations/[id]` | 予約詳細（顧客名・形式・場所・交通費・Meet URL） |
+| I004   | `/instructor/profile`           | 自身のプロフィール表示                           |
+| I005   | `/instructor/profile/edit`      | 編集 + インボイス登録番号                        |
+| I006   | `/instructor/calendar`          | Calendar 連携状態と連携/解除ボタン               |
 
 予約詳細画面は **Q018 準拠**：
+
 - 顧客個人情報は予約に必要な範囲（保護者氏名 + 子供のニックネーム/カナ）のみ
 - 対面の場合のみ住所表示
 - オンラインの場合は Meet URL のみ表示
 
 ### 1.7 講師ナビゲーションとレイアウト
+
 - `InstructorSidebarNav` (Client Component、`usePathname`)
 - 4 メニュー: 予約一覧 / プロフィール / Calendar連携 / メッセージ
 - レイアウトを左サイド 240px + 上部ヘッダー + メイン構成に強化（管理者画面と同等の構造）
@@ -78,21 +86,26 @@
 ## 2. 変更したファイル一覧
 
 ### 新規（13）
+
 **lib（5）**
+
 - `src/lib/google/oauth.ts`
 - `src/lib/reservations/availability.ts`
 - `src/lib/instructor/profile-actions.ts`
 - `src/lib/validators/instructor-self.ts`
 
 **lib（更新）**
+
 - `src/lib/google/calendar.ts`（Phase 0 のスケルトンから本実装に置き換え）
 
 **API Route（3）**
+
 - `src/app/api/instructor/google-calendar/auth-url/route.ts`
 - `src/app/api/instructor/google-calendar/callback/route.ts`
 - `src/app/api/instructor/google-calendar/disconnect/route.ts`
 
 **画面（5）**
+
 - `src/app/(instructor)/instructor/page.tsx`（I002）
 - `src/app/(instructor)/instructor/reservations/[id]/page.tsx`（I003）
 - `src/app/(instructor)/instructor/profile/page.tsx`（I004）
@@ -100,56 +113,64 @@
 - `src/app/(instructor)/instructor/calendar/page.tsx`（I006）
 
 **components（2）**
+
 - `src/components/instructor/sidebar-nav.tsx`
 - `src/components/instructor/profile-form.tsx`
 
 ### 更新（1）
+
 - `src/app/(instructor)/layout.tsx`（サイドナビ + ヘッダー強化）
 
 ### 統計
+
 - 全 TS/TSX: **93 ファイル**（Phase 3 の 80 から +13）
 
 ## 3. 検証結果
 
-| 項目 | 結果 |
-|---|---|
-| TS/TSX 厳密括弧バランス | ✅ 0件不整合（regex `/\\//` の誤検出は除外） |
-| `@/` alias 解決 | ✅ 0件失敗 |
-| 必須ファイル存在チェック | ✅ 15/15 |
-| use server / use client 違反 | ✅ 0件 |
+| 項目                         | 結果                                         |
+| ---------------------------- | -------------------------------------------- |
+| TS/TSX 厳密括弧バランス      | ✅ 0件不整合（regex `/\\//` の誤検出は除外） |
+| `@/` alias 解決              | ✅ 0件失敗                                   |
+| 必須ファイル存在チェック     | ✅ 15/15                                     |
+| use server / use client 違反 | ✅ 0件                                       |
 
 ## 4. QA 反映
 
-| QA | 反映箇所 |
-|---|---|
+| QA       | 反映箇所                                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Q005** | `system_settings.reservation_open_hour/close_hour/onsite_buffer_minutes/online_buffer_minutes/reservation_window_days` を読み出し空き枠生成 |
-| **Q006** | `createCalendarEvent` で `conferenceData.createRequest` を付与し Google Meet URL 自動発行 |
-| **Q012** | `invoice_settings` テーブル + Zod 制約 `^T\d{13}$` + プロフィール編集画面のフォーム |
-| **Q018** | 講師の本名・連絡先メール・電話・自宅住所は本人 + admin のみ閲覧。プロフィール編集では本名は表示のみ |
-| **Q023** | rank は admin のみ編集可。プロフィール画面では「ランク」をバッジ表示するのみ |
+| **Q006** | `createCalendarEvent` で `conferenceData.createRequest` を付与し Google Meet URL 自動発行                                                   |
+| **Q012** | `invoice_settings` テーブル + Zod 制約 `^T\d{13}$` + プロフィール編集画面のフォーム                                                         |
+| **Q018** | 講師の本名・連絡先メール・電話・自宅住所は本人 + admin のみ閲覧。プロフィール編集では本名は表示のみ                                         |
+| **Q023** | rank は admin のみ編集可。プロフィール画面では「ランク」をバッジ表示するのみ                                                                |
 
 ## 5. セキュリティ・運用面
 
 ### 5.1 OAuth トークン保護（SEC006）
+
 - access_token / refresh_token は **AES-256-GCM 暗号化**して `calendar_connections` に保存
 - `ENCRYPTION_KEY` は環境変数（Vercel Secrets で管理）
 - `getValidAccessToken` 内で期限切れ時のみ refresh + 暗号化再保存
 
 ### 5.2 state / nonce の HttpOnly Cookie 保護
+
 - gcal_oauth_state / gcal_oauth_instructor を 10分有効
 - callback 後に削除（state mismatch 防止）
 
 ### 5.3 同期失敗カウンタ
+
 - refresh 失敗時に `sync_failures` をインクリメント
 - 画面で 1 回以上の失敗を警告表示し、再連携を促す
 
 ### 5.4 連携解除時の挙動
+
 - DB の `calendar_connections` レコードを削除
 - 注: Google 側の権限取り消しはユーザー自身で `myaccount.google.com/permissions` から行ってもらう（READMEに記載予定）
 
 ## 6. 動作確認手順
 
 ### 6.1 前提
+
 - Phase 0/1/2/3 のセットアップ完了
 - Google Cloud Console で OAuth 2.0 クライアント作成
   - 承認済みリダイレクト URI: `http://localhost:3000/api/instructor/google-calendar/callback`
@@ -157,6 +178,7 @@
 - `.env.local` に `GOOGLE_CLIENT_ID` `GOOGLE_CLIENT_SECRET` を設定
 
 ### 6.2 シナリオ
+
 ```bash
 cd kizashi
 pnpm install
@@ -201,24 +223,29 @@ pnpm dev
 ## 8. リスク・注意事項
 
 ### 8.1 Free/Busy API の精度
+
 - Google Calendar の `freeBusy` は busy 期間のみを返す。終日イベントや「予定あり」マーク外の時間は free 扱い
 - 個別イベントの subject / 場所は取得しない（プライバシー配慮）
 
 ### 8.2 conferenceData の権限
+
 - Workspace アカウントでは conferenceData の Meet 発行が組織ポリシーで制限されることがある
 - 個人 Google アカウントは標準で利用可能
 
 ### 8.3 Calendar イベントの所属カレンダー
+
 - 現実装は `calendars/primary/events` 固定
 - 講師が「仕事用カレンダー」を別に持つ場合は Phase 12 以降で `calendar_id` 選択 UI を追加検討
 
 ### 8.4 トークン失効時のリトライ
+
 - refresh 1回失敗で sync_failures インクリメント、即時リトライしない
 - ユーザー操作（再連携）で復旧する設計
 
 ## 9. 次のフェーズ（Phase 5: 顧客基本画面）
 
 Phase 5 では以下を実装:
+
 1. 顧客マイページダッシュボード（C002）— チケット残数 / 次回予約 / 履歴
 2. 顧客プロフィール（C014）と編集（C015）— 子供の登録/編集を含む
 3. 講師一覧（C003） — `instructors_public` ビューを使用、カテゴリ・ジャンル絞込

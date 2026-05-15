@@ -12,12 +12,21 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { CATEGORY_LABELS, INSTRUCTOR_DESIGNATION_FEES, RANK_LABELS, type Category, type InstructorRank } from '@/types';
+import {
+  CATEGORY_LABELS,
+  INSTRUCTOR_DESIGNATION_FEES,
+  RANK_LABELS,
+  type Category,
+  type InstructorRank,
+} from '@/types';
 import { formatJPY } from '@/lib/utils';
 import { openCustomerInstructorThreadAction } from '@/lib/messaging/actions';
 import { getCurrentUser } from '@/lib/auth';
 
-const RANK_VARIANT: Record<InstructorRank, 'rankGold' | 'rankSilver' | 'rankBronze' | 'rankRegular'> = {
+const RANK_VARIANT: Record<
+  InstructorRank,
+  'rankGold' | 'rankSilver' | 'rankBronze' | 'rankRegular'
+> = {
   gold: 'rankGold',
   silver: 'rankSilver',
   bronze: 'rankBronze',

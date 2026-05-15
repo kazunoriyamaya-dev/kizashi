@@ -96,7 +96,10 @@ export default async function PayoutsPage({
           <CardTitle className="text-base">対象月</CardTitle>
         </CardHeader>
         <CardContent>
-          <form action={runMonthlyPayoutComputationAction} className="flex flex-wrap items-end gap-3">
+          <form
+            action={runMonthlyPayoutComputationAction}
+            className="flex flex-wrap items-end gap-3"
+          >
             <div>
               <Label htmlFor="period_month" className="text-xs">
                 対象月 (YYYY-MM)
@@ -116,7 +119,11 @@ export default async function PayoutsPage({
             </label>
             <Button type="submit">集計を実行</Button>
             <Button asChild variant="outline">
-              <a href={`/api/admin/payouts/csv?period=${period}`} target="_blank" rel="noopener noreferrer">
+              <a
+                href={`/api/admin/payouts/csv?period=${period}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 CSV ダウンロード
               </a>
             </Button>
@@ -161,7 +168,9 @@ export default async function PayoutsPage({
                       >
                         {r.instructorNickname}
                       </Link>
-                      <span className="ml-2 text-xs text-muted-foreground">{r.instructorRealName}</span>
+                      <span className="ml-2 text-xs text-muted-foreground">
+                        {r.instructorRealName}
+                      </span>
                     </TableCell>
                     <TableCell className="text-right font-mono text-xs">
                       {formatJPY(r.grossAmount)}
@@ -208,9 +217,7 @@ export default async function PayoutsPage({
                         </Badge>
                       )}
                     </TableCell>
-                    <TableCell className="text-xs">
-                      {r.invoiceRegistrationNo ?? '–'}
-                    </TableCell>
+                    <TableCell className="text-xs">{r.invoiceRegistrationNo ?? '–'}</TableCell>
                     <TableCell className="space-y-1">
                       {r.status === 'draft' && (
                         <form action={confirmPayoutAction.bind(null, r.id)}>
@@ -229,7 +236,7 @@ export default async function PayoutsPage({
                         </form>
                       )}
                       {r.status === 'paid' && r.stripeTransferId && (
-                        <span className="block text-[10px] font-mono text-muted-foreground">
+                        <span className="block font-mono text-[10px] text-muted-foreground">
                           {r.stripeTransferId}
                         </span>
                       )}

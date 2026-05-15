@@ -54,14 +54,13 @@ export default async function CustomerReservationDetailPage({
 
   const freeCancelMin = policy?.free_cancel_minutes_before_start ?? 60;
   const freeChangeMin = policy?.free_change_minutes_before_start ?? 60;
-  const minutesUntilStart = Math.floor(
-    (new Date(r.start_at).getTime() - Date.now()) / 1000 / 60,
-  );
+  const minutesUntilStart = Math.floor((new Date(r.start_at).getTime() - Date.now()) / 1000 / 60);
 
   const canFreeCancel =
     r.status === 'confirmed' || r.status === 'pending_payment' || r.status === 'changed';
   const isFreeCancellable = canFreeCancel && minutesUntilStart >= freeCancelMin;
-  const isPenaltyCancellable = canFreeCancel && minutesUntilStart < freeCancelMin && minutesUntilStart >= 0;
+  const isPenaltyCancellable =
+    canFreeCancel && minutesUntilStart < freeCancelMin && minutesUntilStart >= 0;
   const isFreeChangeable = canFreeCancel && minutesUntilStart >= freeChangeMin;
 
   return (
@@ -143,11 +142,11 @@ export default async function CustomerReservationDetailPage({
           </CardHeader>
           <CardContent>
             <ul className="list-disc space-y-1 pl-5 text-sm">
-              {(r.pair_participants as Array<{ name?: string; child_id?: string; type: string }>).map(
-                (p, idx) => (
-                  <li key={idx}>{p.name ?? `子供 ID: ${p.child_id ?? ''}`}</li>
-                ),
-              )}
+              {(
+                r.pair_participants as Array<{ name?: string; child_id?: string; type: string }>
+              ).map((p, idx) => (
+                <li key={idx}>{p.name ?? `子供 ID: ${p.child_id ?? ''}`}</li>
+              ))}
             </ul>
           </CardContent>
         </Card>

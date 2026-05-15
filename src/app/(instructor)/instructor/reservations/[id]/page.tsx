@@ -80,18 +80,23 @@ export default async function InstructorReservationDetailPage({
           </CardHeader>
           <CardContent className="space-y-2 text-sm">
             <Row label="保護者" value={r.customers?.parent_name ?? '–'} />
-            <Row label="お子さん" value={r.children ? `${r.children.name}（${r.children.kana}）` : '–'} />
+            <Row
+              label="お子さん"
+              value={r.children ? `${r.children.name}（${r.children.kana}）` : '–'}
+            />
             {Array.isArray(r.pair_participants) && r.pair_participants.length > 0 && (
               <Row
                 label="ペア参加者"
                 value={
                   <ul className="list-disc pl-4 text-xs">
-                    {(r.pair_participants as Array<{ name?: string; note?: string }>).map((p, i) => (
-                      <li key={i}>
-                        {p.name ?? '(child)'}
-                        {p.note ? ` / ${p.note}` : ''}
-                      </li>
-                    ))}
+                    {(r.pair_participants as Array<{ name?: string; note?: string }>).map(
+                      (p, i) => (
+                        <li key={i}>
+                          {p.name ?? '(child)'}
+                          {p.note ? ` / ${p.note}` : ''}
+                        </li>
+                      ),
+                    )}
                   </ul>
                 }
               />

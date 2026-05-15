@@ -35,9 +35,7 @@ export async function createTrialReservationAction(formData: FormData) {
     const candidate = {
       ...raw,
       duration_min: Number(raw.duration_min),
-      preferred_starts: preferredStartsStr
-        ? preferredStartsStr.split(',').filter(Boolean)
-        : [],
+      preferred_starts: preferredStartsStr ? preferredStartsStr.split(',').filter(Boolean) : [],
     };
     const parsed = CreateTrialReservationSchema.parse(candidate);
     const result = await createTrialReservation(customer.id, me.userId, parsed);

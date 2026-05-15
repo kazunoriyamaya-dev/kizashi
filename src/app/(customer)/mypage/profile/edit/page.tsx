@@ -114,11 +114,7 @@ export default async function EditCustomerProfilePage({
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="phone">電話番号</Label>
-                <Input
-                  id="phone"
-                  name="phone"
-                  defaultValue={customer.profiles?.phone ?? ''}
-                />
+                <Input id="phone" name="phone" defaultValue={customer.profiles?.phone ?? ''} />
               </div>
             </div>
           </CardContent>
@@ -188,8 +184,8 @@ export default async function EditCustomerProfilePage({
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-xs text-muted-foreground">
-            Q019: お子様情報は氏名・フリガナ・生年月日のみを保持します。
-            体験予約はお子様 1 人につき 1 回まで利用可能です。
+            Q019: お子様情報は氏名・フリガナ・生年月日のみを保持します。 体験予約はお子様 1 人につき
+            1 回まで利用可能です。
           </p>
 
           <div className="space-y-3">

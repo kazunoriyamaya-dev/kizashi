@@ -17,7 +17,10 @@ import {
 } from '@/components/ui/table';
 import { CATEGORY_LABELS, RANK_LABELS, type InstructorRank, type Category } from '@/types';
 
-const RANK_VARIANT: Record<InstructorRank, 'rankGold' | 'rankSilver' | 'rankBronze' | 'rankRegular'> = {
+const RANK_VARIANT: Record<
+  InstructorRank,
+  'rankGold' | 'rankSilver' | 'rankBronze' | 'rankRegular'
+> = {
   gold: 'rankGold',
   silver: 'rankSilver',
   bronze: 'rankBronze',
@@ -65,9 +68,7 @@ export default async function InstructorListPage({
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">講師管理</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            講師の登録・編集・招待を行います
-          </p>
+          <p className="mt-1 text-sm text-muted-foreground">講師の登録・編集・招待を行います</p>
         </div>
         <Button asChild>
           <Link href="/admin/instructors/new">講師を新規登録</Link>
@@ -125,7 +126,11 @@ export default async function InstructorListPage({
                 </TableCell>
                 <TableCell className="text-xs">
                   <div className="flex flex-col gap-1">
-                    <span className={i.calendar_connections?.length ? 'text-green-700' : 'text-muted-foreground'}>
+                    <span
+                      className={
+                        i.calendar_connections?.length ? 'text-green-700' : 'text-muted-foreground'
+                      }
+                    >
                       Cal: {i.calendar_connections?.length ? '○' : '–'}
                     </span>
                     <span

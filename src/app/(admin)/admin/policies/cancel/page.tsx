@@ -67,7 +67,9 @@ export default async function CancelPolicyPage({
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="free_cancel_minutes_before_start">無料キャンセル可能時間（開始前 分）</Label>
+              <Label htmlFor="free_cancel_minutes_before_start">
+                無料キャンセル可能時間（開始前 分）
+              </Label>
               <Input
                 id="free_cancel_minutes_before_start"
                 name="free_cancel_minutes_before_start"
@@ -78,7 +80,9 @@ export default async function CancelPolicyPage({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="free_change_minutes_before_start">無料変更可能時間（開始前 分）</Label>
+              <Label htmlFor="free_change_minutes_before_start">
+                無料変更可能時間（開始前 分）
+              </Label>
               <Input
                 id="free_change_minutes_before_start"
                 name="free_change_minutes_before_start"

@@ -24,8 +24,8 @@ export default async function AdminMessagesPage() {
       </div>
 
       <p className="rounded-md border border-yellow-300 bg-yellow-50 p-3 text-xs text-yellow-900">
-        ⚠ プライバシー配慮: 業務上必要な範囲でのみ閲覧してください。
-        重要操作は audit_logs に記録されます。
+        ⚠ プライバシー配慮: 業務上必要な範囲でのみ閲覧してください。 重要操作は audit_logs
+        に記録されます。
       </p>
 
       <ThreadList threads={threads} basePath="/admin/messages" />

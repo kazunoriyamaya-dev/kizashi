@@ -5,7 +5,6 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { renderMarkdownToHtml } from '@/lib/marketing/blog/markdown';
 import { buildTrialCtaUrl } from '@/lib/marketing/landing-pages/render';
 
@@ -52,8 +51,9 @@ export default async function BlogPostPage({ params }: Props) {
 
   // PV インクリメント
   try {
-    const admin = createSupabaseAdminClient();
-    await admin.rpc('fn_increment_blog_view', { p_blog_id: post.id });
+    // fn_increment_blog_view は SECURITY DEFINER + anon grant 済み
+    const supabase = createSupabaseServerClient();
+    await supabase.rpc('fn_increment_blog_view', { p_blog_id: post.id });
   } catch {
     // ignore
   }
@@ -80,7 +80,7 @@ export default async function BlogPostPage({ params }: Props) {
         </header>
 
         <div
-          className="prose prose-slate max-w-none prose-headings:font-bold prose-a:text-primary"
+          className="prose prose-slate prose-headings:font-bold prose-a:text-primary max-w-none"
           // 本文 HTML は admin が登録した Markdown を renderMarkdownToHtml でエスケープ済み。
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: html }}

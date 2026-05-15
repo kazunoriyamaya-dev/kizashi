@@ -38,12 +38,11 @@ export default async function TrialReviewsPage({
     )
     .order('requested_at', { ascending: false });
 
-  const flash =
-    searchParams.approved
-      ? '体験予約を承認しました'
-      : searchParams.rejected
-        ? '体験予約を却下しました'
-        : null;
+  const flash = searchParams.approved
+    ? '体験予約を承認しました'
+    : searchParams.rejected
+      ? '体験予約を却下しました'
+      : null;
   const errorMessage = searchParams.error ? ERROR_MESSAGES[searchParams.error] : undefined;
 
   const pending = (reviews ?? []).filter((r) => r.status === 'pending');
@@ -94,7 +93,7 @@ export default async function TrialReviewsPage({
                 <div className="rounded-md border bg-muted/30 p-3 text-xs">
                   <p className="font-semibold">申請内容</p>
                   <pre className="mt-1 whitespace-pre-wrap break-words text-xs">
-{JSON.stringify(r.requested_payload, null, 2)}
+                    {JSON.stringify(r.requested_payload, null, 2)}
                   </pre>
                 </div>
 

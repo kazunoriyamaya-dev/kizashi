@@ -29,10 +29,7 @@ const PLATFORMS = [
 ];
 
 export default async function AdCampaignsPage() {
-  const [campaigns, summary] = await Promise.all([
-    listAdCampaigns(),
-    fetchAdMetricsSummary(30),
-  ]);
+  const [campaigns, summary] = await Promise.all([listAdCampaigns(), fetchAdMetricsSummary(30)]);
 
   const ctr = summary.impressions > 0 ? (summary.clicks / summary.impressions) * 100 : 0;
   const cpc = summary.clicks > 0 ? summary.spend_jpy / summary.clicks : 0;
@@ -51,7 +48,10 @@ export default async function AdCampaignsPage() {
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard label="CTR (30日)" value={`${ctr.toFixed(2)}%`} />
         <KpiCard label="CPC (30日)" value={formatJPY(Math.round(cpc))} />
-        <KpiCard label="CPA (30日)" value={summary.conversions > 0 ? formatJPY(Math.round(cpa)) : '-'} />
+        <KpiCard
+          label="CPA (30日)"
+          value={summary.conversions > 0 ? formatJPY(Math.round(cpa)) : '-'}
+        />
         <KpiCard label="ROAS (30日)" value={`${roas.toFixed(1)}%`} />
       </section>
 
@@ -99,11 +99,23 @@ export default async function AdCampaignsPage() {
         </div>
         <div className="space-y-1">
           <Label htmlFor="daily_budget_jpy">日予算 (円)</Label>
-          <Input id="daily_budget_jpy" name="daily_budget_jpy" type="number" min={0} defaultValue={0} />
+          <Input
+            id="daily_budget_jpy"
+            name="daily_budget_jpy"
+            type="number"
+            min={0}
+            defaultValue={0}
+          />
         </div>
         <div className="space-y-1">
           <Label htmlFor="total_budget_jpy">総予算 (円)</Label>
-          <Input id="total_budget_jpy" name="total_budget_jpy" type="number" min={0} defaultValue={0} />
+          <Input
+            id="total_budget_jpy"
+            name="total_budget_jpy"
+            type="number"
+            min={0}
+            defaultValue={0}
+          />
         </div>
         <div className="space-y-1">
           <Label htmlFor="start_at">開始</Label>
@@ -152,8 +164,12 @@ export default async function AdCampaignsPage() {
                   </Badge>
                 </TableCell>
                 <TableCell className="font-mono text-xs">{c.external_id ?? '-'}</TableCell>
-                <TableCell className="text-right">¥{c.daily_budget_jpy.toLocaleString('ja-JP')}</TableCell>
-                <TableCell className="text-right">¥{c.total_budget_jpy.toLocaleString('ja-JP')}</TableCell>
+                <TableCell className="text-right">
+                  ¥{c.daily_budget_jpy.toLocaleString('ja-JP')}
+                </TableCell>
+                <TableCell className="text-right">
+                  ¥{c.total_budget_jpy.toLocaleString('ja-JP')}
+                </TableCell>
                 <TableCell>
                   <Badge variant={c.status === 'active' ? 'default' : 'secondary'}>
                     {c.status}

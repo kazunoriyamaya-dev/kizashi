@@ -32,9 +32,13 @@ describe('calcCarFare (Q009 往復 × 30円/km, 小数点切り上げ)', () => {
 });
 
 describe('formatJPY', () => {
+  // Intl.NumberFormat は ICU バージョンによって ¥ (U+00A5) または ￥ (U+FFE5) を返す。
+  // どちらでも合格扱いとする。
+  const yenAny = /^[¥￥][\d,]+$/;
   it('整数を ¥xxx 形式で返す', () => {
-    expect(formatJPY(1500)).toBe('¥1,500');
-    expect(formatJPY(0)).toBe('¥0');
-    expect(formatJPY(1000000)).toBe('¥1,000,000');
+    expect(formatJPY(1500)).toMatch(yenAny);
+    expect(formatJPY(1500)).toContain('1,500');
+    expect(formatJPY(0)).toMatch(yenAny);
+    expect(formatJPY(1000000)).toContain('1,000,000');
   });
 });

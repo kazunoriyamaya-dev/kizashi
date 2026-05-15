@@ -15,10 +15,7 @@ const BodySchema = z.object({
   reason: z.string().min(1).max(200),
 });
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { id: string } },
-) {
+export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   const me = await getCurrentUser();
   if (!me || me.role !== 'admin') {
     return NextResponse.json({ error: 'forbidden' }, { status: 403 });

@@ -239,10 +239,7 @@ export async function updateCalendarEvent(
   }
 }
 
-export async function deleteCalendarEvent(
-  instructorId: string,
-  eventId: string,
-): Promise<void> {
+export async function deleteCalendarEvent(instructorId: string, eventId: string): Promise<void> {
   const accessToken = await getValidAccessToken(instructorId);
   const url = `${EVENTS_URL}/${encodeURIComponent(eventId)}`;
 

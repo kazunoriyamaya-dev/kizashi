@@ -98,10 +98,7 @@ export async function updateCustomerProfileAction(formData: FormData) {
         .select('id')
         .single();
       if (addr) {
-        await admin
-          .from('customers')
-          .update({ primary_address_id: addr.id })
-          .eq('id', customer.id);
+        await admin.from('customers').update({ primary_address_id: addr.id }).eq('id', customer.id);
       }
     }
   }

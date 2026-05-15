@@ -112,11 +112,7 @@ export async function recordTravelFeeForReservation(
     }
     row = data;
   } else {
-    const { data, error } = await admin
-      .from('travel_fees')
-      .insert(payload)
-      .select('id')
-      .single();
+    const { data, error } = await admin.from('travel_fees').insert(payload).select('id').single();
     if (error) {
       logger.error('travel_fees insert failed', { code: error.code });
       return { ok: false, reason: 'unknown' };

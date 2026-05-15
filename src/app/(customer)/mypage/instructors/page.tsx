@@ -9,7 +9,12 @@ import Link from 'next/link';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { InstructorCard } from '@/components/customer/instructor-card';
 import { Badge } from '@/components/ui/badge';
-import { CATEGORY_LABELS, INSTRUCTOR_DESIGNATION_FEES, type Category, type InstructorRank } from '@/types';
+import {
+  CATEGORY_LABELS,
+  INSTRUCTOR_DESIGNATION_FEES,
+  type Category,
+  type InstructorRank,
+} from '@/types';
 import { cn } from '@/lib/utils';
 
 const CATEGORY_FILTERS: Array<{ value: Category | 'all'; label: string }> = [
@@ -65,9 +70,7 @@ export default async function InstructorListPage({
     <div className="space-y-4">
       <div>
         <h1 className="text-2xl font-bold">講師を探す</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          学習・スポーツ・芸術の講師から選べます
-        </p>
+        <p className="mt-1 text-sm text-muted-foreground">学習・スポーツ・芸術の講師から選べます</p>
       </div>
 
       <form>

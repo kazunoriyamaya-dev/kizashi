@@ -37,7 +37,10 @@ export const CreateNormalReservationSchema = z
     category: CategorySchema,
     start_at: z.string().datetime(),
     end_at: z.string().datetime(),
-    duration_min: z.coerce.number().int().refine((v) => [30, 45, 60, 90, 120].includes(v)),
+    duration_min: z.coerce
+      .number()
+      .int()
+      .refine((v) => [30, 45, 60, 90, 120].includes(v)),
     delivery_type: DeliveryTypeSchema,
     location: z
       .object({

@@ -72,16 +72,22 @@ export default async function InstructorDetailPage({
         </div>
         <div className="flex flex-wrap gap-2">
           <form action={sendInstructorInviteAction.bind(null, instructor.id)}>
-            <Button type="submit" variant="outline">招待メールを送信</Button>
+            <Button type="submit" variant="outline">
+              招待メールを送信
+            </Button>
           </form>
           <form action={openAdminInstructorThreadAction.bind(null, instructor.id)}>
-            <Button type="submit" variant="outline">メッセージを開く</Button>
+            <Button type="submit" variant="outline">
+              メッセージを開く
+            </Button>
           </form>
           <Button asChild>
             <Link href={`/admin/instructors/${instructor.id}/edit`}>編集</Link>
           </Button>
           <form action={deleteInstructorAction.bind(null, instructor.id)}>
-            <Button type="submit" variant="destructive">削除（論理）</Button>
+            <Button type="submit" variant="destructive">
+              削除（論理）
+            </Button>
           </form>
         </div>
       </div>
@@ -104,8 +110,14 @@ export default async function InstructorDetailPage({
           </CardHeader>
           <CardContent className="space-y-2 text-sm">
             <DetailRow label="ステータス" value={<StatusBadge status={instructor.status} />} />
-            <DetailRow label="ランク" value={<RankBadge rank={instructor.rank as InstructorRank} />} />
-            <DetailRow label="移動手段" value={instructor.transportation_mode === 'car' ? '車（30円/km）' : '電車'} />
+            <DetailRow
+              label="ランク"
+              value={<RankBadge rank={instructor.rank as InstructorRank} />}
+            />
+            <DetailRow
+              label="移動手段"
+              value={instructor.transportation_mode === 'car' ? '車（30円/km）' : '電車'}
+            />
             <DetailRow label="優先度" value={String(instructor.priority)} />
             <DetailRow
               label="カテゴリ"

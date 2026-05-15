@@ -105,9 +105,7 @@ export default async function CustomerDashboardPage() {
               </ul>
             )}
             {dash.activeTickets.length === 0 && (
-              <p className="mt-2 text-xs text-muted-foreground">
-                チケットを購入して予約しましょう
-              </p>
+              <p className="mt-2 text-xs text-muted-foreground">チケットを購入して予約しましょう</p>
             )}
           </CardContent>
         </Card>

@@ -10,9 +10,11 @@ export type MarketingCampaign = Database['public']['Tables']['marketing_campaign
 export type MarketingAsset = Database['public']['Tables']['marketing_assets']['Row'];
 export type MarketingSnsPost = Database['public']['Tables']['marketing_sns_posts']['Row'];
 export type MarketingLineSegment = Database['public']['Tables']['marketing_line_segments']['Row'];
-export type MarketingLineBroadcast = Database['public']['Tables']['marketing_line_broadcasts']['Row'];
+export type MarketingLineBroadcast =
+  Database['public']['Tables']['marketing_line_broadcasts']['Row'];
 export type MarketingLineScenario = Database['public']['Tables']['marketing_line_scenarios']['Row'];
-export type MarketingEmailSequence = Database['public']['Tables']['marketing_email_sequences']['Row'];
+export type MarketingEmailSequence =
+  Database['public']['Tables']['marketing_email_sequences']['Row'];
 export type MarketingEmailSequenceStep =
   Database['public']['Tables']['marketing_email_sequence_steps']['Row'];
 export type MarketingEmailSubscriber =
@@ -36,19 +38,39 @@ export type MarketingAdMetricDaily =
 // LP の blocks スキーマ
 // =====================================================
 export type LandingPageBlock =
-  | { kind: 'hero'; headline: string; subheadline?: string; ctaLabel?: string; ctaUrl?: string; assetId?: string }
-  | { kind: 'feature_list'; title?: string; items: Array<{ title: string; body: string; iconKey?: string }> }
-  | { kind: 'testimonial'; items: Array<{ author: string; role?: string; body: string; assetId?: string }> }
+  | {
+      kind: 'hero';
+      headline: string;
+      subheadline?: string;
+      ctaLabel?: string;
+      ctaUrl?: string;
+      assetId?: string;
+    }
+  | {
+      kind: 'feature_list';
+      title?: string;
+      items: Array<{ title: string; body: string; iconKey?: string }>;
+    }
+  | {
+      kind: 'testimonial';
+      items: Array<{ author: string; role?: string; body: string; assetId?: string }>;
+    }
   | { kind: 'faq'; items: Array<{ q: string; a: string }> }
   | { kind: 'cta'; headline: string; subheadline?: string; ctaLabel: string; ctaUrl: string }
-  | { kind: 'form'; title?: string; description?: string; sequenceId?: string; submitLabel?: string }
+  | {
+      kind: 'form';
+      title?: string;
+      description?: string;
+      sequenceId?: string;
+      submitLabel?: string;
+    }
   | {
       kind: 'trial_cta';
       headline?: string;
       description?: string;
-      ctaLabel?: string;          // 既定: 「無料体験レッスンを予約する」
-      ctaUrl?: string;            // 既定: /login?redirect_to=/mypage/trial-reservation&utm_*=...
-      bullets?: string[];         // 体験で得られるメリット箇条書き
+      ctaLabel?: string; // 既定: 「無料体験レッスンを予約する」
+      ctaUrl?: string; // 既定: /login?redirect_to=/mypage/trial-reservation&utm_*=...
+      bullets?: string[]; // 体験で得られるメリット箇条書き
     }
   | { kind: 'rich_text'; html: string };
 

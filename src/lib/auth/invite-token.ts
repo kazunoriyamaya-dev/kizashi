@@ -27,15 +27,14 @@ function getSecret(): Buffer {
 
 function base64url(input: Buffer | string): string {
   const buf = typeof input === 'string' ? Buffer.from(input) : input;
-  return buf
-    .toString('base64')
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/g, '');
+  return buf.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
 }
 
 function fromBase64url(input: string): Buffer {
-  const padded = input.replace(/-/g, '+').replace(/_/g, '/').padEnd(input.length + ((4 - (input.length % 4)) % 4), '=');
+  const padded = input
+    .replace(/-/g, '+')
+    .replace(/_/g, '/')
+    .padEnd(input.length + ((4 - (input.length % 4)) % 4), '=');
   return Buffer.from(padded, 'base64');
 }
 

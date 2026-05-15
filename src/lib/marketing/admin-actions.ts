@@ -76,7 +76,10 @@ export async function createAsset(formData: FormData) {
   });
 
   const tags = parsed.tags
-    ? parsed.tags.split(',').map((t) => t.trim()).filter((t) => t.length > 0)
+    ? parsed.tags
+        .split(',')
+        .map((t) => t.trim())
+        .filter((t) => t.length > 0)
     : [];
 
   const admin = createSupabaseAdminClient();
@@ -374,7 +377,10 @@ export async function createBlogPost(formData: FormData) {
   });
 
   const tags = parsed.tags
-    ? parsed.tags.split(',').map((t) => t.trim()).filter((t) => t.length > 0)
+    ? parsed.tags
+        .split(',')
+        .map((t) => t.trim())
+        .filter((t) => t.length > 0)
     : [];
 
   const html = renderMarkdownToHtml(parsed.body_markdown);

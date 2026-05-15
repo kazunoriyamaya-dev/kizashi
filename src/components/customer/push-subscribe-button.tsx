@@ -97,10 +97,9 @@ export function PushSubscribeButton({ vapidPublicKey }: Props) {
       const reg = await navigator.serviceWorker.getRegistration();
       const sub = await reg?.pushManager.getSubscription();
       if (sub) {
-        await fetch(
-          `/api/push/subscribe?endpoint=${encodeURIComponent(sub.endpoint)}`,
-          { method: 'DELETE' },
-        );
+        await fetch(`/api/push/subscribe?endpoint=${encodeURIComponent(sub.endpoint)}`, {
+          method: 'DELETE',
+        });
         await sub.unsubscribe();
       }
       setSubscribed(false);

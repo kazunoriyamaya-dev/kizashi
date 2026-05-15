@@ -11,7 +11,7 @@
  * 注: Stripe Product/Price は再利用するため、本番では管理者画面で事前に紐付ける運用を推奨。
  *     現実装は MVP として lazy sync (created_at 時に同期) を採用。
  */
-import Stripe from 'stripe';
+import type Stripe from 'stripe';
 import { getStripe } from '@/lib/stripe';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { logger } from '@/lib/logger';
@@ -35,10 +35,7 @@ export interface CreateCheckoutSessionResult {
 /**
  * customers.stripe_customer_id を取得 or 新規作成
  */
-async function ensureStripeCustomer(
-  customerId: string,
-  email: string,
-): Promise<string> {
+async function ensureStripeCustomer(customerId: string, email: string): Promise<string> {
   const admin = createSupabaseAdminClient();
   const stripe = getStripe();
 
@@ -149,17 +146,15 @@ export async function createCheckoutSession(
 
   // 事前 payment 行を pending で作成しておく（webhook 受信前の DB トレース用）
   const admin = createSupabaseAdminClient();
-  await admin
-    .from('payments')
-    .insert({
-      customer_id: input.customerId,
-      ticket_id: input.ticketId,
-      stripe_session_id: session.id,
-      amount: 0, // webhook で確定
-      currency: 'jpy',
-      status: 'pending',
-      metadata: { return_to: input.returnTo ?? null },
-    });
+  await admin.from('payments').insert({
+    customer_id: input.customerId,
+    ticket_id: input.ticketId,
+    stripe_session_id: session.id,
+    amount: 0, // webhook で確定
+    currency: 'jpy',
+    status: 'pending',
+    metadata: { return_to: input.returnTo ?? null },
+  });
 
   return { sessionId: session.id, checkoutUrl: session.url };
 }

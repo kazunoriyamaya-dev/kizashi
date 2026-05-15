@@ -18,7 +18,10 @@ interface LinePushBody {
   messages: Array<{ type: 'text'; text: string }>;
 }
 
-async function sendLinePush(toUserId: string, text: string): Promise<{ ok: boolean; error?: string }> {
+async function sendLinePush(
+  toUserId: string,
+  text: string,
+): Promise<{ ok: boolean; error?: string }> {
   const token = process.env.LINE_CHANNEL_ACCESS_TOKEN;
   if (!token) {
     return { ok: false, error: 'LINE_CHANNEL_ACCESS_TOKEN_missing' };
@@ -70,7 +73,11 @@ export async function dispatchPendingLineMessages(limit = 50): Promise<{
     if (!row.to_line_user_id) {
       await admin
         .from('line_notification_logs')
-        .update({ status: 'failed', error_message: 'no_to_line_user_id', sent_at: new Date().toISOString() })
+        .update({
+          status: 'failed',
+          error_message: 'no_to_line_user_id',
+          sent_at: new Date().toISOString(),
+        })
         .eq('id', row.id);
       failed++;
       continue;

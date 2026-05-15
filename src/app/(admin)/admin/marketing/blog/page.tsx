@@ -91,7 +91,11 @@ export default async function BlogPostsPage() {
         </div>
         <div className="space-y-1">
           <Label htmlFor="ai_provider">AI モデル (任意)</Label>
-          <Input id="ai_model" name="ai_model" placeholder="claude-opus-4-7 / gpt-4o / gemini-2.5" />
+          <Input
+            id="ai_model"
+            name="ai_model"
+            placeholder="claude-opus-4-7 / gpt-4o / gemini-2.5"
+          />
         </div>
         <div className="space-y-1">
           <Label htmlFor="ai_prompt">AI プロンプト (任意)</Label>

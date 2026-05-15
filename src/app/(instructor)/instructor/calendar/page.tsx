@@ -17,7 +17,8 @@ const ERROR_MESSAGES: Record<string, string> = {
   missing_params: '認証情報が不足しています。',
   state_mismatch: 'セッションが切れたため、再度お試しください。',
   token_exchange: 'アクセストークンの取得に失敗しました。',
-  no_refresh_token: 'リフレッシュトークンが取得できませんでした。Google アカウント側の連携を一度解除して再度お試しください。',
+  no_refresh_token:
+    'リフレッシュトークンが取得できませんでした。Google アカウント側の連携を一度解除して再度お試しください。',
   db_insert: '連携情報の保存に失敗しました。',
   db_update: '連携情報の更新に失敗しました。',
   forbidden: 'アクセス権がありません。',
@@ -101,16 +102,11 @@ export default async function InstructorCalendarPage({
           {conn ? (
             <>
               <Row label="Google アカウント" value={conn.google_account_email} />
-              <Row
-                label="連携日"
-                value={new Date(conn.created_at).toLocaleString('ja-JP')}
-              />
+              <Row label="連携日" value={new Date(conn.created_at).toLocaleString('ja-JP')} />
               <Row
                 label="最終同期"
                 value={
-                  conn.last_synced_at
-                    ? new Date(conn.last_synced_at).toLocaleString('ja-JP')
-                    : '–'
+                  conn.last_synced_at ? new Date(conn.last_synced_at).toLocaleString('ja-JP') : '–'
                 }
               />
               <Row
@@ -138,7 +134,8 @@ export default async function InstructorCalendarPage({
           ) : (
             <>
               <p className="text-muted-foreground">
-                まだ Google Calendar と連携していません。連携することで、Calendar 上の予定が顧客の予約候補から自動的に除外されます。
+                まだ Google Calendar と連携していません。連携することで、Calendar
+                上の予定が顧客の予約候補から自動的に除外されます。
               </p>
               <form action="/api/instructor/google-calendar/auth-url">
                 <Button type="submit">Google Calendar と連携する</Button>

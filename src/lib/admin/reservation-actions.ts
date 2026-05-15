@@ -18,12 +18,9 @@ async function ensureAdmin() {
  * - reason は customer / company / instructor を選択可
  * - 講師都合の場合は Q014 によりチケット消化なし
  */
-export async function adminCancelReservationAction(
-  reservationId: string,
-  formData: FormData,
-) {
+export async function adminCancelReservationAction(reservationId: string, formData: FormData) {
   const me = await ensureAdmin();
-  const reason = (String(formData.get('reason') ?? 'company') as CancelReason);
+  const reason = String(formData.get('reason') ?? 'company') as CancelReason;
   const note = String(formData.get('note') ?? '').trim();
   const performStripeRefund = formData.get('refund') === 'on';
 
@@ -47,10 +44,7 @@ export async function adminCancelReservationAction(
 /**
  * 管理者による予約強制変更
  */
-export async function adminChangeReservationAction(
-  reservationId: string,
-  formData: FormData,
-) {
+export async function adminChangeReservationAction(reservationId: string, formData: FormData) {
   const me = await ensureAdmin();
   const newStart = String(formData.get('start_at') ?? '');
   const newEnd = String(formData.get('end_at') ?? '');

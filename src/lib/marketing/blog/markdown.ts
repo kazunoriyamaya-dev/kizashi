@@ -34,15 +34,21 @@ function safeUrl(url: string): string {
 function inline(text: string): string {
   let s = escapeHtml(text);
   // image first (so it doesn't get matched as link)
-  s = s.replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)/g, (_, alt: string, url: string, title?: string) => {
-    const t = title ? ` title="${escapeHtml(title)}"` : '';
-    return `<img src="${safeUrl(url)}" alt="${alt}" loading="lazy"${t} />`;
-  });
+  s = s.replace(
+    /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)/g,
+    (_, alt: string, url: string, title?: string) => {
+      const t = title ? ` title="${escapeHtml(title)}"` : '';
+      return `<img src="${safeUrl(url)}" alt="${alt}" loading="lazy"${t} />`;
+    },
+  );
   // link
-  s = s.replace(/\[([^\]]+)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)/g, (_, label: string, url: string, title?: string) => {
-    const t = title ? ` title="${escapeHtml(title)}"` : '';
-    return `<a href="${safeUrl(url)}" rel="noopener noreferrer"${t}>${label}</a>`;
-  });
+  s = s.replace(
+    /\[([^\]]+)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)/g,
+    (_, label: string, url: string, title?: string) => {
+      const t = title ? ` title="${escapeHtml(title)}"` : '';
+      return `<a href="${safeUrl(url)}" rel="noopener noreferrer"${t}>${label}</a>`;
+    },
+  );
   // bold / italic / code
   s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
   s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');

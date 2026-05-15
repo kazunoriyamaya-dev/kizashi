@@ -116,9 +116,7 @@ export async function changeReservation(
   // 通知 (3 チャネル) — 顧客への通知が必要なので reservation の customer_id から profile_id を引く
   const { data: rsvData } = await admin
     .from('reservations')
-    .select(
-      `customers!reservations_customer_id_fkey ( profile_id )`,
-    )
+    .select(`customers!reservations_customer_id_fkey ( profile_id )`)
     .eq('id', input.reservationId)
     .maybeSingle();
   const targetProfileId = rsvData?.customers?.profile_id ?? input.actorProfileId;

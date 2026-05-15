@@ -63,23 +63,13 @@ export function ChildRow({ child, updateAction, deleteAction }: ChildRowProps) {
           <Label htmlFor={`name-${child.id}`} className="text-xs">
             お名前
           </Label>
-          <Input
-            id={`name-${child.id}`}
-            name="name"
-            required
-            defaultValue={child.name}
-          />
+          <Input id={`name-${child.id}`} name="name" required defaultValue={child.name} />
         </div>
         <div className="space-y-1">
           <Label htmlFor={`kana-${child.id}`} className="text-xs">
             フリガナ
           </Label>
-          <Input
-            id={`kana-${child.id}`}
-            name="kana"
-            required
-            defaultValue={child.kana}
-          />
+          <Input id={`kana-${child.id}`} name="kana" required defaultValue={child.kana} />
         </div>
       </div>
       <div className="mt-2 grid gap-2 sm:grid-cols-2">

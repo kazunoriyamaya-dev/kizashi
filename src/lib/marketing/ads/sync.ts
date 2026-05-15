@@ -39,22 +39,20 @@ export async function syncAdMetricsDaily(targetDate: Date = new Date()): Promise
       skipped++;
       continue;
     }
-    await admin
-      .from('marketing_ad_metrics_daily')
-      .upsert(
-        {
-          ad_campaign_id: c.id,
-          date: dateStr,
-          impressions: metrics.impressions,
-          clicks: metrics.clicks,
-          conversions: metrics.conversions,
-          spend_jpy: metrics.spend_jpy,
-          revenue_jpy: metrics.revenue_jpy,
-          raw_payload: metrics.raw ?? {},
-          fetched_at: new Date().toISOString(),
-        },
-        { onConflict: 'ad_campaign_id,date' },
-      );
+    await admin.from('marketing_ad_metrics_daily').upsert(
+      {
+        ad_campaign_id: c.id,
+        date: dateStr,
+        impressions: metrics.impressions,
+        clicks: metrics.clicks,
+        conversions: metrics.conversions,
+        spend_jpy: metrics.spend_jpy,
+        revenue_jpy: metrics.revenue_jpy,
+        raw_payload: metrics.raw ?? {},
+        fetched_at: new Date().toISOString(),
+      },
+      { onConflict: 'ad_campaign_id,date' },
+    );
     fetched++;
   }
 

@@ -6,10 +6,7 @@
  */
 import { NextResponse, type NextRequest } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
-import {
-  decodeIdTokenEmail,
-  exchangeCodeForGoogleTokens,
-} from '@/lib/google/oauth';
+import { decodeIdTokenEmail, exchangeCodeForGoogleTokens } from '@/lib/google/oauth';
 import { encrypt } from '@/lib/encryption';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { logger } from '@/lib/logger';
@@ -35,9 +32,7 @@ export async function GET(request: NextRequest) {
   const cookieState = request.cookies.get('gcal_oauth_state')?.value;
   const cookieInstructorId = request.cookies.get('gcal_oauth_instructor')?.value;
   if (!cookieState || cookieState !== state || !cookieInstructorId) {
-    return NextResponse.redirect(
-      new URL('/instructor/calendar?error=state_mismatch', request.url),
-    );
+    return NextResponse.redirect(new URL('/instructor/calendar?error=state_mismatch', request.url));
   }
 
   const appUrl = process.env.APP_URL ?? 'http://localhost:3000';
@@ -54,11 +49,12 @@ export async function GET(request: NextRequest) {
   if (!tokens.refresh_token) {
     // 既連携の再認可で refresh_token が返らないケース。
     // prompt=consent を強制しているので通常は来ないが、ガードしておく。
-    return NextResponse.redirect(new URL('/instructor/calendar?error=no_refresh_token', request.url));
+    return NextResponse.redirect(
+      new URL('/instructor/calendar?error=no_refresh_token', request.url),
+    );
   }
 
-  const accountEmail =
-    (tokens.id_token && decodeIdTokenEmail(tokens.id_token)) ?? 'unknown@google';
+  const accountEmail = (tokens.id_token && decodeIdTokenEmail(tokens.id_token)) ?? 'unknown@google';
   const expiresAt = new Date(Date.now() + tokens.expires_in * 1000).toISOString();
 
   const admin = createSupabaseAdminClient();
@@ -88,17 +84,13 @@ export async function GET(request: NextRequest) {
       .eq('id', existing.id);
     if (error) {
       logger.error('calendar_connections update failed', { code: error.code });
-      return NextResponse.redirect(
-        new URL('/instructor/calendar?error=db_update', request.url),
-      );
+      return NextResponse.redirect(new URL('/instructor/calendar?error=db_update', request.url));
     }
   } else {
     const { error } = await admin.from('calendar_connections').insert(payload);
     if (error) {
       logger.error('calendar_connections insert failed', { code: error.code });
-      return NextResponse.redirect(
-        new URL('/instructor/calendar?error=db_insert', request.url),
-      );
+      return NextResponse.redirect(new URL('/instructor/calendar?error=db_insert', request.url));
     }
   }
 

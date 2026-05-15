@@ -57,7 +57,7 @@ export async function createInstructorAction(formData: FormData) {
   let parsed: CreateInstructorInput;
   try {
     parsed = CreateInstructorSchema.parse(raw);
-  } catch (e) {
+  } catch {
     logger.warn('createInstructor parse failed');
     redirect(`/admin/instructors/new?error=validation`);
   }
@@ -196,10 +196,7 @@ export async function updateInstructorAction(instructorId: string, formData: For
   const updates: Record<string, unknown> = { ...parsed.data };
   delete updates.base_address;
 
-  const { error: updErr } = await admin
-    .from('instructors')
-    .update(updates)
-    .eq('id', instructorId);
+  const { error: updErr } = await admin.from('instructors').update(updates).eq('id', instructorId);
 
   if (updErr) {
     logger.error('instructor update failed', { code: updErr.code });
@@ -230,10 +227,7 @@ export async function updateInstructorAction(instructorId: string, formData: For
         .select('id')
         .single();
       if (addr) {
-        await admin
-          .from('instructors')
-          .update({ base_address_id: addr.id })
-          .eq('id', instructorId);
+        await admin.from('instructors').update({ base_address_id: addr.id }).eq('id', instructorId);
       }
     }
   }

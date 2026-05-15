@@ -2,7 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { CreateNormalReservationSchema } from '@/lib/validators/reservation';
 import { TicketSchema } from '@/lib/validators/ticket';
 import { ChildSchema } from '@/lib/validators/customer';
-import { InstructorSelfUpdateSchema, InvoiceSettingsSchema } from '@/lib/validators/instructor-self';
+import {
+  InstructorSelfUpdateSchema,
+  InvoiceSettingsSchema,
+} from '@/lib/validators/instructor-self';
 
 const UUID = '12345678-1234-1234-1234-123456789012';
 

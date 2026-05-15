@@ -8,7 +8,6 @@ import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
 import type { Metadata } from 'next';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { normalizeBlocks, buildTrialCtaUrl } from '@/lib/marketing/landing-pages/render';
 import { LandingPageSubscribeForm } from '@/components/marketing/lp-form';
 
@@ -23,7 +22,9 @@ async function fetchPage(slug: string) {
   const supabase = createSupabaseServerClient();
   const { data } = await supabase
     .from('marketing_landing_pages')
-    .select('id, slug, title, headline, subheadline, blocks, meta_title, meta_description, og_image_url, status')
+    .select(
+      'id, slug, title, headline, subheadline, blocks, meta_title, meta_description, og_image_url, status',
+    )
     .eq('slug', slug)
     .maybeSingle();
   return data;
@@ -47,10 +48,12 @@ export default async function LandingPageRoute({ params }: Props) {
   const page = await fetchPage(params.slug);
   if (!page) notFound();
 
-  // PV をインクリメント (best-effort)
+  // PV をインクリメント (best-effort)。
+  // fn_increment_landing_page_view は SECURITY DEFINER + anon grant 済みなので
+  // 通常の supabase クライアント (anon key) から呼べる。
   try {
-    const admin = createSupabaseAdminClient();
-    await admin.rpc('fn_increment_landing_page_view', { p_lp_id: page.id });
+    const supabase = createSupabaseServerClient();
+    await supabase.rpc('fn_increment_landing_page_view', { p_lp_id: page.id });
   } catch {
     // ignore
   }
@@ -192,7 +195,9 @@ export default async function LandingPageRoute({ params }: Props) {
                     <ul className="mt-6 inline-block space-y-2 text-left text-sm">
                       {block.bullets.map((b, j) => (
                         <li key={j} className="flex items-start gap-2">
-                          <span aria-hidden className="text-primary">✓</span>
+                          <span aria-hidden className="text-primary">
+                            ✓
+                          </span>
                           <span>{b}</span>
                         </li>
                       ))}

@@ -20,11 +20,18 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
   const body = await request.json().catch(() => ({}));
   const parsed = TicketSchema.partial().safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: 'validation', details: parsed.error.flatten() }, { status: 400 });
+    return NextResponse.json(
+      { error: 'validation', details: parsed.error.flatten() },
+      { status: 400 },
+    );
   }
 
   const admin = createSupabaseAdminClient();
-  const { data: before } = await admin.from('tickets').select('*').eq('id', params.id).maybeSingle();
+  const { data: before } = await admin
+    .from('tickets')
+    .select('*')
+    .eq('id', params.id)
+    .maybeSingle();
   if (!before) return NextResponse.json({ error: 'not_found' }, { status: 404 });
 
   const { error } = await admin.from('tickets').update(parsed.data).eq('id', params.id);

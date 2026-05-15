@@ -39,9 +39,7 @@ describe('Markdown renderer', () => {
   });
 
   it('renders safe links + rejects javascript: URLs', () => {
-    expect(renderMarkdownToHtml('[ok](https://x.test)')).toContain(
-      '<a href="https://x.test"',
-    );
+    expect(renderMarkdownToHtml('[ok](https://x.test)')).toContain('<a href="https://x.test"');
     expect(renderMarkdownToHtml('[bad](javascript:alert(1))')).toContain('href="#"');
   });
 

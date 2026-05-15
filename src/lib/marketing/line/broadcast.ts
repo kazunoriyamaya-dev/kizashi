@@ -18,7 +18,9 @@ import type { LineMessageObject } from '@/lib/marketing/types';
 const LINE_BROADCAST_URL = 'https://api.line.me/v2/bot/message/broadcast';
 const LINE_NARROWCAST_URL = 'https://api.line.me/v2/bot/message/narrowcast';
 
-async function sendBroadcast(messages: LineMessageObject[]): Promise<{ ok: boolean; error?: string; requestId?: string }> {
+async function sendBroadcast(
+  messages: LineMessageObject[],
+): Promise<{ ok: boolean; error?: string; requestId?: string }> {
   const token = process.env.LINE_CHANNEL_ACCESS_TOKEN;
   if (!token) return { ok: false, error: 'LINE_CHANNEL_ACCESS_TOKEN_missing' };
 
@@ -113,9 +115,7 @@ export async function dispatchScheduledLineBroadcasts(limit = 20): Promise<{
       .eq('status', 'scheduled');
 
     const result =
-      row.target_type === 'all'
-        ? await sendBroadcast(messages)
-        : await sendNarrowcast(messages);
+      row.target_type === 'all' ? await sendBroadcast(messages) : await sendNarrowcast(messages);
 
     if (result.ok) {
       await admin

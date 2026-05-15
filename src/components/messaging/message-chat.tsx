@@ -63,13 +63,7 @@ export function MessageChat({
             const isMine = m.senderProfileId === currentProfileId;
             const role = m.senderRole ?? 'customer';
             return (
-              <div
-                key={m.id}
-                className={cn(
-                  'flex flex-col',
-                  isMine ? 'items-end' : 'items-start',
-                )}
-              >
+              <div key={m.id} className={cn('flex flex-col', isMine ? 'items-end' : 'items-start')}>
                 <div
                   className={cn(
                     'max-w-[80%] rounded-lg px-3 py-2 text-sm shadow-sm',
@@ -110,9 +104,7 @@ export function MessageChat({
           value={body}
           onChange={(e) => setBody(e.target.value)}
           placeholder={
-            currentRole === 'admin'
-              ? 'メッセージを入力 (管理者として送信)'
-              : 'メッセージを入力'
+            currentRole === 'admin' ? 'メッセージを入力 (管理者として送信)' : 'メッセージを入力'
           }
           rows={2}
           maxLength={5000}

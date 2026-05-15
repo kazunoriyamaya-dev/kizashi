@@ -146,8 +146,7 @@ async function fetchTrainFare(
     headers: {
       'Content-Type': 'application/json',
       'X-Goog-Api-Key': apiKey,
-      'X-Goog-FieldMask':
-        'routes.distanceMeters,routes.duration,routes.travelAdvisory.transitFare',
+      'X-Goog-FieldMask': 'routes.distanceMeters,routes.duration,routes.travelAdvisory.transitFare',
     },
     body: JSON.stringify(body),
   });
@@ -211,8 +210,7 @@ export async function calculateTravelFare(
         mode: 'car',
         amount: 0,
         manual: true,
-        manualReason:
-          'Google Maps から距離を取得できませんでした。手動で入力してください。',
+        manualReason: 'Google Maps から距離を取得できませんでした。手動で入力してください。',
       };
     }
     const amount = calcCarFare(r.distanceKm); // 往復 × 30円/km、切り上げ (Q009)

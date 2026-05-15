@@ -9,10 +9,7 @@ import { getCurrentUser } from '@/lib/auth';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { cancelReservation } from '@/lib/reservations/cancel';
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } },
-) {
+export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
   const me = await getCurrentUser();
   if (!me || me.role !== 'customer') {
     return NextResponse.json({ error: 'forbidden' }, { status: 403 });

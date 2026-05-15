@@ -28,7 +28,9 @@ export interface CustomerDashboardData {
   totalPaymentAmount: number;
 }
 
-export async function fetchCustomerDashboard(profileId: string): Promise<CustomerDashboardData | null> {
+export async function fetchCustomerDashboard(
+  profileId: string,
+): Promise<CustomerDashboardData | null> {
   const supabase = createSupabaseServerClient();
 
   const { data: customer } = await supabase
@@ -74,11 +76,7 @@ export async function fetchCustomerDashboard(profileId: string): Promise<Custome
       .from('reservations')
       .select('id', { count: 'exact', head: true })
       .eq('customer_id', customer.id),
-    supabase
-      .from('payments')
-      .select('amount')
-      .eq('customer_id', customer.id)
-      .eq('status', 'paid'),
+    supabase.from('payments').select('amount').eq('customer_id', customer.id).eq('status', 'paid'),
   ]);
 
   const totalRemainingTickets = (tickets ?? []).reduce(

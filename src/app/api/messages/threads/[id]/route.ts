@@ -7,10 +7,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { getThreadWithMessages, markThreadAsRead } from '@/lib/messaging/threads';
 
-export async function GET(
-  _request: NextRequest,
-  { params }: { params: { id: string } },
-) {
+export async function GET(_request: NextRequest, { params }: { params: { id: string } }) {
   const me = await getCurrentUser();
   if (!me) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
 

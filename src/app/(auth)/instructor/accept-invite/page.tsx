@@ -14,11 +14,7 @@ import { verifyInviteToken } from '@/lib/auth/invite-token';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { AcceptInviteForm } from './accept-invite-form';
 
-export default function AcceptInvitePage({
-  searchParams,
-}: {
-  searchParams: { token?: string };
-}) {
+export default function AcceptInvitePage({ searchParams }: { searchParams: { token?: string } }) {
   const token = searchParams.token;
   const verified = token ? verifyInviteToken(token) : null;
 
@@ -27,9 +23,7 @@ export default function AcceptInvitePage({
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl">講師アカウント初期設定</CardTitle>
-          <CardDescription>
-            ログインに使用するパスワードを設定してください
-          </CardDescription>
+          <CardDescription>ログインに使用するパスワードを設定してください</CardDescription>
         </CardHeader>
         <CardContent>
           {!token ? (

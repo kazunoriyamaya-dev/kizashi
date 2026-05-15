@@ -52,7 +52,11 @@ export async function dispatchPendingEmails(limit = 50): Promise<{
     if (!row.to_email) {
       await admin
         .from('email_notification_logs')
-        .update({ status: 'failed', error_message: 'no_to_email', sent_at: new Date().toISOString() })
+        .update({
+          status: 'failed',
+          error_message: 'no_to_email',
+          sent_at: new Date().toISOString(),
+        })
         .eq('id', row.id);
       failed++;
       continue;

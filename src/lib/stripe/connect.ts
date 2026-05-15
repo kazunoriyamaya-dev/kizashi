@@ -88,9 +88,7 @@ export async function syncConnectAccountStatus(
   const acct = await stripe.accounts.retrieve(stripeAccountId);
   const admin = createSupabaseAdminClient();
 
-  const onboardingDone =
-    acct.details_submitted &&
-    (acct.charges_enabled || acct.payouts_enabled);
+  const onboardingDone = acct.details_submitted && (acct.charges_enabled || acct.payouts_enabled);
 
   await admin
     .from('stripe_connect_accounts')

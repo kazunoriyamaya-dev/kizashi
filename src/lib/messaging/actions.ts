@@ -4,11 +4,7 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { getCurrentUser } from '@/lib/auth';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
-import {
-  findOrCreateThread,
-  getThreadWithMessages,
-  sendMessage,
-} from '@/lib/messaging/threads';
+import { findOrCreateThread, getThreadWithMessages, sendMessage } from '@/lib/messaging/threads';
 import { logger } from '@/lib/logger';
 
 /**

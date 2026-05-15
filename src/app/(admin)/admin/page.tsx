@@ -5,14 +5,7 @@
  *  + 直近の体験予約管理者確認待ち件数
  *  + 今後の予約数 (start_at >= now())
  */
-import {
-  GraduationCap,
-  Users,
-  Ticket,
-  Calendar,
-  AlertCircle,
-  ClipboardCheck,
-} from 'lucide-react';
+import { GraduationCap, Users, Ticket, Calendar, AlertCircle, ClipboardCheck } from 'lucide-react';
 import { fetchAdminDashboardKpi } from '@/lib/admin/dashboard-queries';
 import { KpiCard } from '@/components/admin/kpi-card';
 import { formatJPY } from '@/lib/utils';

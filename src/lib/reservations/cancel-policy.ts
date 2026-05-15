@@ -149,9 +149,7 @@ export function canChangeReservation(
   startAt: string,
   policy: CancelPolicySnapshot,
 ): { allowed: boolean; minutesUntilStart: number; deadlineMin: number } {
-  const minutesUntilStart = Math.floor(
-    (new Date(startAt).getTime() - Date.now()) / 1000 / 60,
-  );
+  const minutesUntilStart = Math.floor((new Date(startAt).getTime() - Date.now()) / 1000 / 60);
   return {
     allowed: minutesUntilStart >= policy.free_change_minutes_before_start,
     minutesUntilStart,

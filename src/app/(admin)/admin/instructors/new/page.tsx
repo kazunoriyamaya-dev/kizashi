@@ -11,11 +11,7 @@ const ERROR_MESSAGES: Record<string, string> = {
   instructor_create: '講師レコードの作成に失敗しました。',
 };
 
-export default function NewInstructorPage({
-  searchParams,
-}: {
-  searchParams: { error?: string };
-}) {
+export default function NewInstructorPage({ searchParams }: { searchParams: { error?: string } }) {
   const errorMessage = searchParams.error ? ERROR_MESSAGES[searchParams.error] : undefined;
 
   return (

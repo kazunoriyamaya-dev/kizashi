@@ -83,9 +83,11 @@ export default async function TicketListPage({
               <TableRow key={t.id}>
                 <TableCell className="font-medium">{t.name}</TableCell>
                 <TableCell>
-                  {t.category
-                    ? CATEGORY_LABELS[t.category as Category]
-                    : <Badge variant="outline">共通</Badge>}
+                  {t.category ? (
+                    CATEGORY_LABELS[t.category as Category]
+                  ) : (
+                    <Badge variant="outline">共通</Badge>
+                  )}
                 </TableCell>
                 <TableCell className="text-sm">
                   {t.duration_min}分 / {t.lesson_format === 'pair' ? 'ペア' : '単独'}

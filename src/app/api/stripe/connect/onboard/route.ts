@@ -9,10 +9,7 @@
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
-import {
-  createAccountOnboardingLink,
-  createOrGetConnectAccount,
-} from '@/lib/stripe/connect';
+import { createAccountOnboardingLink, createOrGetConnectAccount } from '@/lib/stripe/connect';
 import { logger } from '@/lib/logger';
 
 export async function POST() {

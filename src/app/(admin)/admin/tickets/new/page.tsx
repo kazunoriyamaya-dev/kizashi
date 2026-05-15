@@ -10,11 +10,7 @@ const ERROR_MESSAGES: Record<string, string> = {
   create_failed: '登録に失敗しました。',
 };
 
-export default function NewTicketPage({
-  searchParams,
-}: {
-  searchParams: { error?: string };
-}) {
+export default function NewTicketPage({ searchParams }: { searchParams: { error?: string } }) {
   const errorMessage = searchParams.error ? ERROR_MESSAGES[searchParams.error] : undefined;
 
   return (

@@ -173,10 +173,7 @@ export async function findOrCreateThread(
 /**
  * ロールに応じて参加 / 監査可能なスレッド一覧を返す
  */
-export async function listThreadsForUser(
-  role: Role,
-  profileId: string,
-): Promise<ThreadSummary[]> {
+export async function listThreadsForUser(role: Role, profileId: string): Promise<ThreadSummary[]> {
   const admin = createSupabaseAdminClient();
 
   let query = admin
@@ -259,7 +256,9 @@ export async function getThreadWithMessages(
   threadId: string,
   role: Role,
   profileId: string,
-): Promise<{ thread: ThreadDetail; messages: MessageRow[] } | { error: 'forbidden' | 'not_found' }> {
+): Promise<
+  { thread: ThreadDetail; messages: MessageRow[] } | { error: 'forbidden' | 'not_found' }
+> {
   const admin = createSupabaseAdminClient();
   const { data: thread } = await admin
     .from('message_threads')

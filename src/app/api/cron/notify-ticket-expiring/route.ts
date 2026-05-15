@@ -54,12 +54,16 @@ export async function GET(request: NextRequest) {
       if (!profileId) continue;
 
       try {
-        await enqueueNotification('ticket_expiring', { profileId }, {
-          customer_ticket_id: t.id,
-          days_left: d,
-          expires_at: t.expires_at,
-          remaining_count: t.remaining_count,
-        });
+        await enqueueNotification(
+          'ticket_expiring',
+          { profileId },
+          {
+            customer_ticket_id: t.id,
+            days_left: d,
+            expires_at: t.expires_at,
+            remaining_count: t.remaining_count,
+          },
+        );
         totalEnqueued++;
       } catch (e) {
         logger.warn('ticket expiring enqueue failed', { code: (e as Error).message });

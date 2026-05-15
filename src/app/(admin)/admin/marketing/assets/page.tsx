@@ -30,8 +30,8 @@ export default async function AssetsPage() {
       <div>
         <h1 className="text-2xl font-bold">アセット ライブラリ</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          SNS / LP / ブログで使うメディアアセットを登録します。
-          画像生成 AI を使った場合は ai_prompt / ai_provider を記録してください。
+          SNS / LP / ブログで使うメディアアセットを登録します。 画像生成 AI を使った場合は ai_prompt
+          / ai_provider を記録してください。
         </p>
       </div>
 
@@ -81,7 +81,11 @@ export default async function AssetsPage() {
         </div>
         <div className="space-y-1">
           <Label htmlFor="ai_provider">AI 生成元</Label>
-          <Input id="ai_provider" name="ai_provider" placeholder="dall-e / midjourney / canva / 自社" />
+          <Input
+            id="ai_provider"
+            name="ai_provider"
+            placeholder="dall-e / midjourney / canva / 自社"
+          />
         </div>
         <div className="space-y-1">
           <Label htmlFor="ai_prompt">AI プロンプト</Label>

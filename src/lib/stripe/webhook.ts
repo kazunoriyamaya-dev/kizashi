@@ -113,7 +113,9 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
   const amount = session.amount_total ?? 0;
   const paymentIntentId =
-    typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id;
+    typeof session.payment_intent === 'string'
+      ? session.payment_intent
+      : session.payment_intent?.id;
 
   if (!paymentIntentId) throw new Error('missing_payment_intent');
 
@@ -160,8 +162,7 @@ async function handlePaymentIntentSucceeded(pi: Stripe.PaymentIntent) {
   // charge と balance_transaction を expand 取得
   let charge: Stripe.Charge | null = null;
   if (pi.latest_charge) {
-    const chargeId =
-      typeof pi.latest_charge === 'string' ? pi.latest_charge : pi.latest_charge.id;
+    const chargeId = typeof pi.latest_charge === 'string' ? pi.latest_charge : pi.latest_charge.id;
     charge = await stripe.charges.retrieve(chargeId, { expand: ['balance_transaction'] });
   }
 

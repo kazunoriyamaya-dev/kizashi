@@ -16,7 +16,7 @@ const NAV_ITEMS = [
 export function CustomerBottomNav() {
   const pathname = usePathname();
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background pb-safe">
+    <nav className="pb-safe fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background">
       <div className="mx-auto flex max-w-screen-md items-stretch justify-around">
         {NAV_ITEMS.map(({ href, label, Icon, exact }) => {
           const active = exact ? pathname === href : pathname.startsWith(href);

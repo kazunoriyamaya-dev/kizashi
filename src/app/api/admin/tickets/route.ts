@@ -37,7 +37,10 @@ export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => ({}));
   const parsed = TicketSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: 'validation', details: parsed.error.flatten() }, { status: 400 });
+    return NextResponse.json(
+      { error: 'validation', details: parsed.error.flatten() },
+      { status: 400 },
+    );
   }
 
   const admin = createSupabaseAdminClient();

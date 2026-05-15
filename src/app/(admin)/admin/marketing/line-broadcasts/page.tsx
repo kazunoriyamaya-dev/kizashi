@@ -24,8 +24,8 @@ export default async function LineBroadcastsPage() {
       <div>
         <h1 className="text-2xl font-bold">LINE 公式ブロードキャスト</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          target_type=all は全友だち配信、segment / tag は narrowcast を使用します。
-          scheduled_at 到達時に cron で配信。
+          target_type=all は全友だち配信、segment / tag は narrowcast を使用します。 scheduled_at
+          到達時に cron で配信。
         </p>
       </div>
 

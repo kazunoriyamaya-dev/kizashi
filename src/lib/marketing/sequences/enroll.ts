@@ -12,7 +12,7 @@ export interface SubscribeInput {
   name?: string;
   source?: string;
   landingPageId?: string;
-  sequenceIds?: string[];           // 明示指定がある場合は trigger 設定を無視してこれにエンロール
+  sequenceIds?: string[]; // 明示指定がある場合は trigger 設定を無視してこれにエンロール
   tags?: string[];
   metadata?: Record<string, unknown>;
 }
@@ -109,7 +109,8 @@ async function resolveTargetSequences(input: SubscribeInput): Promise<string[]> 
   return data
     .filter((s) => {
       if (s.trigger === 'subscription') return true;
-      if (s.trigger === 'tag_added' && s.trigger_tag && (input.tags ?? []).includes(s.trigger_tag)) return true;
+      if (s.trigger === 'tag_added' && s.trigger_tag && (input.tags ?? []).includes(s.trigger_tag))
+        return true;
       return false;
     })
     .map((s) => s.id);

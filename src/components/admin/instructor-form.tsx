@@ -50,9 +50,7 @@ export function InstructorForm({
   submitLabel = '登録',
   cancelHref = '/admin/instructors',
 }: InstructorFormProps) {
-  const [genresText, setGenresText] = useState(
-    (defaultValues.genres ?? []).join(','),
-  );
+  const [genresText, setGenresText] = useState((defaultValues.genres ?? []).join(','));
 
   return (
     <form action={action} className="space-y-6">
@@ -103,12 +101,7 @@ export function InstructorForm({
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="nickname">ニックネーム（公開）</Label>
-            <Input
-              id="nickname"
-              name="nickname"
-              required
-              defaultValue={defaultValues.nickname}
-            />
+            <Input id="nickname" name="nickname" required defaultValue={defaultValues.nickname} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="avatar_url">顔写真 URL（任意）</Label>

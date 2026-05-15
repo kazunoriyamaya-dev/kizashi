@@ -3,16 +3,12 @@
  */
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { getCurrentUser } from '@/lib/auth';
 import { getThreadWithMessages, markThreadAsRead } from '@/lib/messaging/threads';
+import { recordThreadViewedAudit } from '@/lib/messaging/audit';
 import { MessageChat } from '@/components/messaging/message-chat';
 
-export default async function AdminMessageThreadPage({
-  params,
-}: {
-  params: { threadId: string };
-}) {
+export default async function AdminMessageThreadPage({ params }: { params: { threadId: string } }) {
   const me = await getCurrentUser();
   if (!me) return null;
 
@@ -22,14 +18,7 @@ export default async function AdminMessageThreadPage({
   await markThreadAsRead(params.threadId, 'admin');
 
   // 監査閲覧の audit_logs を記録
-  const admin = createSupabaseAdminClient();
-  await admin.from('audit_logs').insert({
-    actor_profile_id: me.userId,
-    actor_role: 'admin',
-    action: 'message_thread.viewed',
-    target_table: 'message_threads',
-    target_id: params.threadId,
-  });
+  await recordThreadViewedAudit({ actorProfileId: me.userId, threadId: params.threadId });
 
   const { thread, messages } = result;
   const counterpart =

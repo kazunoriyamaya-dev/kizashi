@@ -83,7 +83,10 @@ function generateCandidateSlots(
 /**
  * busy 期間 + バッファ を1つの BusyInterval に拡張する
  */
-function expandBusyWithBuffer(busy: { start: string; end: string }[], bufferMin: number): BusyInterval[] {
+function expandBusyWithBuffer(
+  busy: { start: string; end: string }[],
+  bufferMin: number,
+): BusyInterval[] {
   return busy.map((b) => ({
     start: addMinutes(new Date(b.start), -bufferMin),
     end: addMinutes(new Date(b.end), bufferMin),
@@ -115,7 +118,9 @@ export async function fetchAvailableSlots(req: AvailabilityRequest): Promise<Ava
   // システム設定取得
   const { data: settings } = await admin
     .from('system_settings')
-    .select('reservation_open_hour, reservation_close_hour, onsite_buffer_minutes, online_buffer_minutes, reservation_window_days')
+    .select(
+      'reservation_open_hour, reservation_close_hour, onsite_buffer_minutes, online_buffer_minutes, reservation_window_days',
+    )
     .maybeSingle();
 
   const openHour = settings?.reservation_open_hour ?? 9;
@@ -138,7 +143,11 @@ export async function fetchAvailableSlots(req: AvailabilityRequest): Promise<Ava
   // 1. Google Calendar Free/Busy
   let calendarBusy: { start: string; end: string }[] = [];
   try {
-    calendarBusy = await getFreeBusyForInstructor(instructorId, fromDate.toISOString(), toDate.toISOString());
+    calendarBusy = await getFreeBusyForInstructor(
+      instructorId,
+      fromDate.toISOString(),
+      toDate.toISOString(),
+    );
   } catch (e) {
     logger.warn('calendar freebusy unavailable, continue with DB-only', {
       code: (e as Error).message,

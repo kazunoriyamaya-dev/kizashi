@@ -140,7 +140,7 @@ export default async function NewReservationPage({
           rank: instructor.rank as InstructorRank,
           designation_fee: designationFee,
         }}
-        children={childrenList}
+        childrenList={childrenList}
         tickets={ticketOptions}
         defaultCategory={defaultCategory}
       />

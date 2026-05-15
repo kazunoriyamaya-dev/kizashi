@@ -177,6 +177,103 @@ export async function listAdCampaigns(limit = 50) {
   return data ?? [];
 }
 
+export interface AnalyticsEngagementSummary {
+  eventCount30: number;
+  eventCount7: number;
+  affiliateClick30: number;
+  affiliateConversion30: number;
+  emailSent30: number;
+  emailFailed30: number;
+  topEvents: Array<{ name: string; count: number }>;
+  topPages: Array<{
+    id: string;
+    title: string;
+    slug: string;
+    view_count: number;
+    conversion_count: number;
+  }>;
+}
+
+/**
+ * /admin/marketing/analytics 用のエンゲージメント指標を service-role で集計。
+ * Server Component から直接 createSupabaseAdminClient を呼ばないために lib 側にまとめる
+ * (ESLint no-restricted-imports に準拠)。
+ */
+export async function fetchAnalyticsEngagementSummary(): Promise<AnalyticsEngagementSummary> {
+  const admin = createSupabaseAdminClient();
+  const since30 = new Date(Date.now() - 30 * 24 * 60 * 60_000).toISOString();
+  const since7 = new Date(Date.now() - 7 * 24 * 60 * 60_000).toISOString();
+
+  const [
+    eventCount30,
+    eventCount7,
+    affiliateClick30,
+    affiliateConversion30,
+    emailSent30,
+    emailFailed30,
+    topEventsRes,
+    topPagesRes,
+  ] = await Promise.all([
+    admin
+      .from('marketing_analytics_events')
+      .select('*', { count: 'exact', head: true })
+      .gte('created_at', since30),
+    admin
+      .from('marketing_analytics_events')
+      .select('*', { count: 'exact', head: true })
+      .gte('created_at', since7),
+    admin
+      .from('marketing_affiliate_clicks')
+      .select('*', { count: 'exact', head: true })
+      .gte('clicked_at', since30),
+    admin
+      .from('marketing_affiliate_conversions')
+      .select('*', { count: 'exact', head: true })
+      .gte('converted_at', since30),
+    admin
+      .from('marketing_email_sends')
+      .select('*', { count: 'exact', head: true })
+      .gte('created_at', since30)
+      .eq('status', 'sent'),
+    admin
+      .from('marketing_email_sends')
+      .select('*', { count: 'exact', head: true })
+      .gte('created_at', since30)
+      .eq('status', 'failed'),
+    admin
+      .from('marketing_analytics_events')
+      .select('event_name')
+      .gte('created_at', since30)
+      .limit(1000),
+    admin
+      .from('marketing_landing_pages')
+      .select('id, title, slug, view_count, conversion_count')
+      .eq('status', 'published')
+      .order('view_count', { ascending: false })
+      .limit(10),
+  ]);
+
+  const counts = new Map<string, number>();
+  for (const e of (topEventsRes.data ?? []) as Array<{ event_name: string }>) {
+    counts.set(e.event_name, (counts.get(e.event_name) ?? 0) + 1);
+  }
+  const topEvents = Array.from(counts.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
+    .map(([name, count]) => ({ name, count }));
+
+  return {
+    eventCount30: eventCount30.count ?? 0,
+    eventCount7: eventCount7.count ?? 0,
+    affiliateClick30: affiliateClick30.count ?? 0,
+    affiliateConversion30: affiliateConversion30.count ?? 0,
+    emailSent30: emailSent30.count ?? 0,
+    emailFailed30: emailFailed30.count ?? 0,
+    topEvents,
+    topPages: (topPagesRes.data ?? []) as AnalyticsEngagementSummary['topPages'],
+  };
+}
+
 export async function fetchAdMetricsSummary(days = 30) {
   const admin = createSupabaseAdminClient();
   const since = new Date(Date.now() - days * 24 * 60 * 60_000).toISOString().slice(0, 10);

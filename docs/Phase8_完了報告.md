@@ -6,6 +6,7 @@
 ## 1. 実装した内容
 
 ### 1.1 SQL Migration: 体験予約 RPC
+
 `supabase/migrations/20260511000001_trial_reservation_rpcs.sql`
 
 - **`fn_create_trial_reservation`**: 自動割当済みの講師・時間で体験予約を確定
@@ -21,6 +22,7 @@
 ### 1.2 自動割当アルゴリズム (`lib/reservations/auto-assign.ts`)
 
 **設計書 Q004 準拠の 4段階スコアリング**:
+
 1. 対応カテゴリで講師をフィルタ（必須）
 2. 空き枠取得（Phase 4 の `fetchAvailableSlots`）
 3. 稼働均等: 過去 30 日の `confirmed/changed/completed` 件数が**少ない**講師を優先
@@ -41,11 +43,13 @@
 7. 通知ログ作成（メール）
 
 戻り値 Union 型:
+
 - `{ ok:true, status:'confirmed', reservationId, instructorId, startAt, endAt, meetUrl }`
 - `{ ok:true, status:'pending_review', reviewId, matchedChildId }`
 - `{ ok:false, errorCode: ... }`
 
 ### 1.4 体験予約 API + Server Action (API017)
+
 - `POST /api/customer/trial-reservations` — JSON Body
 - `createTrialReservationAction` Server Action
 - 結果に応じて適切な画面へ redirect:
@@ -54,6 +58,7 @@
   - エラー → `/mypage/trial-reservation?error=xxx`
 
 ### 1.5 C008 体験予約画面
+
 - 「お子様 1 人につき 1 回まで無料」の説明（Q002）
 - 体験未利用の子供のみ選択可（`trial_used=false`）
 - ジャンル 3 種から選択（learning/sports/art）
@@ -63,17 +68,20 @@
 - インライン script で `from_date/to_date` → `from_iso/to_iso` 変換
 
 ### 1.6 体験予約 確認待ち画面 (`/mypage/trial-reservation/pending`)
+
 - 黄色背景でステータス表示
 - 申請日時 / ステータス / 管理者メモ
 - 承認後は `resulting_reservation_id` から予約詳細へリンク
 
 ### 1.7 管理者向け体験予約承認画面 (`/admin/trial-reviews`)
+
 - **確認待ち**セクション: 子供情報・申請者・申請内容 JSON 表示
 - 管理者メモ入力 + 「承認して予約成立」「却下」ボタン
 - **処理済み**セクション: 承認/却下履歴
 - サイドナビに「体験確認」メニュー追加 (Sparkles アイコン)
 
 ### 1.8 承認 Server Action (`lib/admin/trial-review-actions.ts`)
+
 - `approveTrialReviewAction`:
   - `trial_pending_reviews.status` を `approved` に
   - 保存されていた `requested_payload` を再パース
@@ -87,10 +95,13 @@
 ## 2. 変更したファイル一覧
 
 ### 新規（10）
+
 **SQL Migration (1)**
+
 - `supabase/migrations/20260511000001_trial_reservation_rpcs.sql`
 
 **lib (5)**
+
 - `src/lib/reservations/auto-assign.ts`
 - `src/lib/reservations/create-trial.ts`
 - `src/lib/validators/trial-reservation.ts`
@@ -98,41 +109,45 @@
 - `src/lib/admin/trial-review-actions.ts`
 
 **画面 (3)**
+
 - `src/app/(customer)/mypage/trial-reservation/page.tsx`
 - `src/app/(customer)/mypage/trial-reservation/pending/page.tsx`
 - `src/app/(admin)/admin/trial-reviews/page.tsx`
 
 **API Route (1)**
+
 - `src/app/api/customer/trial-reservations/route.ts`
 
 ### 更新（2）
+
 - `src/types/database.ts` — 2 RPC の型追加
 - `src/components/admin/sidebar-nav.tsx` — 「体験確認」メニュー追加
 
 ### 統計
+
 - 全 TS/TSX: **133 ファイル**（Phase 7 の 124 から +9）
 - 全 SQL: **17 ファイル**（+1 体験予約 RPC migration）
 
 ## 3. 検証結果
 
-| 項目 | 結果 |
-|---|---|
-| TS/TSX 厳密括弧バランス | ✅ 0件不整合 |
-| `@/` alias 解決 | ✅ 0件失敗 |
-| 必須ファイル存在チェック | ✅ 10/10 |
-| use server / use client 違反 | ✅ 0件 |
+| 項目                          | 結果                  |
+| ----------------------------- | --------------------- |
+| TS/TSX 厳密括弧バランス       | ✅ 0件不整合          |
+| `@/` alias 解決               | ✅ 0件失敗            |
+| 必須ファイル存在チェック      | ✅ 10/10              |
+| use server / use client 違反  | ✅ 0件                |
 | SQL Migration 括弧 / ドル引用 | ✅ 16ファイル全件パス |
 
 ## 4. QA 反映
 
-| QA | 反映箇所 |
-|---|---|
-| **Q002** | 期限不要、`children.trial_used=false` のみ体験対象。期間制限ロジックなし |
+| QA       | 反映箇所                                                                                      |
+| -------- | --------------------------------------------------------------------------------------------- |
+| **Q002** | 期限不要、`children.trial_used=false` のみ体験対象。期間制限ロジックなし                      |
 | **Q003** | `fn_find_trial_duplicates` (Phase 1 で実装済み) で完全一致検索 → `trial_pending_reviews` 登録 |
-| **Q004** | 4段階スコアリング: カテゴリ → 空き枠 → 稼働均等 → priority |
-| **Q006** | 体験予約も `createCalendarEvent` で Google Meet URL 自動発行 |
-| **Q019** | 子供情報は氏名・カナ・生年月日のみ、画面で扱う情報も最小限 |
-| **Q023** | 体験予約でも講師ランクの指名料を `reservations.designation_fee` に保存 |
+| **Q004** | 4段階スコアリング: カテゴリ → 空き枠 → 稼働均等 → priority                                    |
+| **Q006** | 体験予約も `createCalendarEvent` で Google Meet URL 自動発行                                  |
+| **Q019** | 子供情報は氏名・カナ・生年月日のみ、画面で扱う情報も最小限                                    |
+| **Q023** | 体験予約でも講師ランクの指名料を `reservations.designation_fee` に保存                        |
 
 ## 5. 動作確認手順
 
@@ -144,6 +159,7 @@ pnpm dev
 ```
 
 ### シナリオ
+
 1. **新規顧客の体験予約**:
    - `/mypage` → 「体験レッスンが利用できます」黄色バナー
    - 「体験予約する」→ `/mypage/trial-reservation`
@@ -170,18 +186,22 @@ pnpm dev
 ## 7. リスク・注意事項
 
 ### 7.1 自動割当の競合
+
 - 同時アクセスで同じ講師・時間の枠が選ばれた場合、2 つ目の RPC が EXCLUDE 制約で `23P01` → `time_conflict` エラー
 - ユーザーが再試行すれば別講師・別枠で割当される
 
 ### 7.2 承認後の予約失敗
+
 - 承認時に自動割当を再実行するため、申請から承認までの間に枠が埋まる可能性
 - 失敗時は `?error=no_available_instructor` で管理者にフィードバック
 
 ### 7.3 重複判定の精度
+
 - 現状は氏名+カナ+生年月日の完全一致（大文字小文字を `lower` で正規化）
 - 「ヤマダタロウ」と「やまだたろう」の表記揺れは検知不可（運用ルールで管理）
 
 ### 7.4 体験予約の指名料
+
 - 体験予約も指名料が発生する仕様（Q023）
 - Stripe 連携は未実装。現状は `reservations.designation_fee` に保存するのみ
 - Phase 12 の月次精算で集計対象
@@ -189,6 +209,7 @@ pnpm dev
 ## 8. 次のフェーズ（Phase 9: 予約変更 / キャンセル）
 
 Phase 9 で実装:
+
 1. **予約変更 (C011, F032)** — ポリシー判定 (Q013: 1時間前まで無料)
 2. **予約キャンセル (F033)** — チケット返却 (Q013): 半額返金-返金手数料 / 全額返金 / 消化扱い
 3. **講師都合キャンセル (Q014)** — チケット消化なし + 顧客通知 + 代替講師確認

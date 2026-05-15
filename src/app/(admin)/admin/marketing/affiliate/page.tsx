@@ -39,8 +39,8 @@ export default async function AffiliatePage() {
       <div>
         <h1 className="text-2xl font-bold">アフィリエイト</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          ブログ記事や LP から外部 ASP / 自社プログラムへ送客するリンクを管理します。
-          /r/[code] で UTM 付きリダイレクトしてクリックを記録します。
+          ブログ記事や LP から外部 ASP / 自社プログラムへ送客するリンクを管理します。 /r/[code] で
+          UTM 付きリダイレクトしてクリックを記録します。
         </p>
       </div>
 
@@ -73,7 +73,12 @@ export default async function AffiliatePage() {
           </div>
           <div className="space-y-1">
             <Label htmlFor="default_commission_jpy">既定報酬 (円)</Label>
-            <Input id="default_commission_jpy" name="default_commission_jpy" type="number" min={0} />
+            <Input
+              id="default_commission_jpy"
+              name="default_commission_jpy"
+              type="number"
+              min={0}
+            />
           </div>
           <div className="space-y-1">
             <Label htmlFor="default_commission_rate">既定報酬率 (%)</Label>
@@ -117,7 +122,9 @@ export default async function AffiliatePage() {
                 <TableRow key={p.id}>
                   <TableCell>{p.name}</TableCell>
                   <TableCell className="text-xs">{p.network}</TableCell>
-                  <TableCell className="max-w-md truncate font-mono text-xs">{p.base_url}</TableCell>
+                  <TableCell className="max-w-md truncate font-mono text-xs">
+                    {p.base_url}
+                  </TableCell>
                   <TableCell>
                     <Badge variant={p.is_active ? 'default' : 'secondary'}>
                       {p.is_active ? '稼働中' : '停止'}

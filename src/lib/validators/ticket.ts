@@ -11,9 +11,12 @@ export const TicketSchema = z.object({
   price: z.coerce.number().int().min(0),
   session_count: z.coerce.number().int().min(1),
   valid_days: z.coerce.number().int().min(1).max(3650),
-  duration_min: z.coerce.number().int().refine((v) => [30, 45, 60, 90, 120].includes(v), {
-    message: 'duration_min は 30/45/60/90/120 のいずれか',
-  }),
+  duration_min: z.coerce
+    .number()
+    .int()
+    .refine((v) => [30, 45, 60, 90, 120].includes(v), {
+      message: 'duration_min は 30/45/60/90/120 のいずれか',
+    }),
   lesson_format: LessonFormatSchema.default('solo'),
   sort_order: z.coerce.number().int().min(0).default(0),
   status: TicketStatusSchema.default('active'),

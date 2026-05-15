@@ -16,16 +16,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { CATEGORY_LABELS, type Category, type ReservationStatus } from '@/types';
+import { CATEGORY_LABELS, type Category } from '@/types';
 import { formatJPY } from '@/lib/utils';
 import {
   adminCancelReservationAction,
   adminChangeReservationAction,
 } from '@/lib/admin/reservation-actions';
-import {
-  setTravelFeeManualAction,
-  recalcTravelFeeAction,
-} from '@/lib/admin/travel-fee-actions';
+import { setTravelFeeManualAction, recalcTravelFeeAction } from '@/lib/admin/travel-fee-actions';
 
 const ERROR_MESSAGES: Record<string, string> = {
   reservation_not_found: '予約が見つかりません。',
@@ -152,7 +149,10 @@ export default async function AdminReservationDetailPage({
           <Row label="カテゴリ" value={CATEGORY_LABELS[rsv.category as Category]} />
           <Row label="形式" value={rsv.delivery_type === 'onsite' ? '対面' : 'オンライン'} />
           <Row label="顧客" value={rsv.customers?.parent_name ?? '–'} />
-          <Row label="お子様" value={`${rsv.children?.name ?? ''}（${rsv.children?.kana ?? ''}）`} />
+          <Row
+            label="お子様"
+            value={`${rsv.children?.name ?? ''}（${rsv.children?.kana ?? ''}）`}
+          />
           <Row label="講師" value={rsv.instructors?.nickname ?? '未割当'} />
           <Row label="指名料" value={formatJPY(rsv.designation_fee ?? 0)} />
           {rsv.customer_tickets && (
@@ -161,9 +161,7 @@ export default async function AdminReservationDetailPage({
               value={`${rsv.customer_tickets.tickets?.name ?? '–'} (残${rsv.customer_tickets.remaining_count}回)`}
             />
           )}
-          {rsv.cancel_reason && (
-            <Row label="キャンセル理由" value={rsv.cancel_reason} />
-          )}
+          {rsv.cancel_reason && <Row label="キャンセル理由" value={rsv.cancel_reason} />}
           {rsv.cancel_note && <Row label="メモ" value={rsv.cancel_note} />}
           {rsv.google_meet_url && (
             <Row
@@ -277,7 +275,7 @@ export default async function AdminReservationDetailPage({
                     className="h-9"
                   />
                 </div>
-                <div className="sm:col-span-2 flex justify-end gap-2 pt-1">
+                <div className="flex justify-end gap-2 pt-1 sm:col-span-2">
                   <form action={recalcTravelFeeAction.bind(null, rsv.id)}>
                     <Button type="submit" variant="outline" size="sm">
                       Maps から再計算
@@ -341,10 +339,7 @@ export default async function AdminReservationDetailPage({
               <CardTitle className="text-base">強制キャンセル (Q013/Q014)</CardTitle>
             </CardHeader>
             <CardContent>
-              <form
-                action={adminCancelReservationAction.bind(null, rsv.id)}
-                className="space-y-3"
-              >
+              <form action={adminCancelReservationAction.bind(null, rsv.id)} className="space-y-3">
                 <div className="space-y-1.5">
                   <Label htmlFor="reason">キャンセル理由</Label>
                   <select

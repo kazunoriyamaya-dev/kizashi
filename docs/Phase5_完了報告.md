@@ -6,11 +6,13 @@
 ## 1. 実装した内容
 
 ### 1.1 shadcn/ui 拡張
+
 - `Avatar` / `AvatarImage` / `AvatarFallback`（Radix UI、講師カード・詳細用）
 - `Tabs` / `TabsList` / `TabsTrigger` / `TabsContent`（プロフィール画面のタブ用）
 - `Skeleton`（ローディング表示用）
 
 ### 1.2 顧客モバイル下部固定ナビゲーション
+
 - `CustomerBottomNav` (Client Component、`usePathname` でアクティブ判定)
 - 5 タブ: ホーム / 講師 / 予約 / メッセージ / プロフィール
 - セーフエリア対応 (`pb-safe`)
@@ -19,17 +21,20 @@
 ### 1.3 顧客プロフィール / 子供管理 (Validators + Server Actions)
 
 **Validators** (`lib/validators/customer.ts`):
+
 - `CustomerProfileSchema` — 保護者氏名・フリガナ・電話・主住所
 - `ChildSchema` — Q019 準拠（氏名・フリガナ・生年月日・メモのみ、学校名・写真なし）
 - `birth_date` は `^\d{4}-\d{2}-\d{2}$` 制約
 
 **Server Actions** (`lib/customer/profile-actions.ts`):
+
 - `updateCustomerProfileAction` — `customers` + `profiles` + `addresses` の3テーブル更新
 - `addChildAction` — children INSERT、`23505` UNIQUE 違反は「同じ情報が登録済」として扱う
 - `updateChildAction` — children UPDATE
 - `deleteChildAction` — `23503` FK 違反は「予約あり」として扱う
 
 ### 1.4 C002 顧客ダッシュボード
+
 - KPI カード 4種（チケット残数・次回予約・予約履歴件数・購入金額）
 - **チケット残数（家族合算 Q024）**: customer_id 単位で active かつ remaining > 0 の合計
 - **新規顧客導線**: 子供登録 0 件なら登録 CTA、未使用体験あり子供がいれば体験予約 CTA を強調
@@ -37,11 +42,13 @@
 - 購入金額（累計）と詳細遷移ボタン
 
 ### 1.5 C014 顧客プロフィール表示
+
 - 保護者情報カード（名前・フリガナ・メール・電話・SSO種別バッジ）
 - 子供情報カード（一覧、体験済/未使用バッジ）
 - 主住所カード（任意）
 
 ### 1.6 C015 顧客プロフィール編集
+
 - 保護者プロフィール編集フォーム（氏名・フリガナ・表示名・電話）
 - 主住所編集フォーム（任意）
 - **子供管理セクション**:
@@ -51,6 +58,7 @@
 - エラーメッセージは日本語化、UNIQUE / FK 制約違反を分離
 
 ### 1.7 C003 講師一覧
+
 - `instructors_public` ビュー経由で公開列のみ取得（Q018）
 - カテゴリ絞り込みフィルタ（Badge クリックで切替）
 - ニックネーム / bio / ジャンルで部分一致検索
@@ -58,12 +66,14 @@
 - `InstructorCard` コンポーネント: アバター + ニックネーム + ランク + カテゴリ + ジャンル + 自己紹介プレビュー + **指名料**
 
 ### 1.8 C004 講師詳細
+
 - アバター（フォールバックは ニックネーム冒頭2文字）
 - ランクバッジ・対応カテゴリ・対応ジャンル・自己紹介
 - **Q023 指名料の明示**: 「+¥1,500」など、無料は「無料」表記
 - sticky 下部に「この講師に予約する」ボタン → `/mypage/reservations/new?instructorId=xxx`
 
 ### 1.9 公開講師取得 API (API014)
+
 - `GET /api/customer/instructors`
 - `instructors_public` ビュー経由
 - `?category=learning|sports|art` フィルタ対応
@@ -72,12 +82,15 @@
 ## 2. 変更したファイル一覧
 
 ### 新規（13）
+
 **lib（3）**
+
 - `src/lib/customer/dashboard-queries.ts`
 - `src/lib/customer/profile-actions.ts`
 - `src/lib/validators/customer.ts`
 
 **components（5）**
+
 - `src/components/ui/avatar.tsx`
 - `src/components/ui/tabs.tsx`
 - `src/components/ui/skeleton.tsx`
@@ -86,40 +99,44 @@
 - `src/components/customer/child-row.tsx`
 
 **画面（4）**
+
 - `src/app/(customer)/mypage/instructors/page.tsx` (C003)
 - `src/app/(customer)/mypage/instructors/[id]/page.tsx` (C004)
 - `src/app/(customer)/mypage/profile/page.tsx` (C014)
 - `src/app/(customer)/mypage/profile/edit/page.tsx` (C015)
 
 **API Route（1）**
+
 - `src/app/api/customer/instructors/route.ts` (API014)
 
 ### 更新（2）
+
 - `src/app/(customer)/layout.tsx` — 下部ナビ + sticky header
 - `src/app/(customer)/mypage/page.tsx` (C002) — プレースホルダーから本実装へ
 
 ### 統計
+
 - 全 TS/TSX: **107 ファイル**（Phase 4 の 93 から +14）
 
 ## 3. 検証結果
 
-| 項目 | 結果 |
-|---|---|
-| TS/TSX 厳密括弧バランス | ✅ 0件不整合 |
-| `@/` alias 解決 | ✅ 0件失敗 |
-| 必須ファイル存在チェック | ✅ 15/15 |
-| use server / use client 違反 | ✅ 0件 |
+| 項目                         | 結果         |
+| ---------------------------- | ------------ |
+| TS/TSX 厳密括弧バランス      | ✅ 0件不整合 |
+| `@/` alias 解決              | ✅ 0件失敗   |
+| 必須ファイル存在チェック     | ✅ 15/15     |
+| use server / use client 違反 | ✅ 0件       |
 
 ## 4. QA 反映
 
-| QA | 反映箇所 |
-|---|---|
-| **Q001** | プロフィール画面で兄弟複数登録可能（ペア予約は Phase 6 で UI 実装） |
-| **Q003** | children テーブルの UNIQUE 制約が効くことで重複追加時に明確なエラー表示 |
+| QA       | 反映箇所                                                                    |
+| -------- | --------------------------------------------------------------------------- |
+| **Q001** | プロフィール画面で兄弟複数登録可能（ペア予約は Phase 6 で UI 実装）         |
+| **Q003** | children テーブルの UNIQUE 制約が効くことで重複追加時に明確なエラー表示     |
 | **Q018** | 講師一覧/詳細は `instructors_public` ビュー経由で本名・住所・連絡先を非表示 |
-| **Q019** | ChildSchema は氏名・カナ・生年月日・メモのみ（学校・写真は持たない） |
-| **Q023** | 講師カード/詳細で指名料を明示 (`+¥1,500` 等) |
-| **Q024** | ダッシュボードのチケット残数は家族合算（customer_id 単位） |
+| **Q019** | ChildSchema は氏名・カナ・生年月日・メモのみ（学校・写真は持たない）        |
+| **Q023** | 講師カード/詳細で指名料を明示 (`+¥1,500` 等)                                |
+| **Q024** | ダッシュボードのチケット残数は家族合算（customer_id 単位）                  |
 
 ## 5. 動作確認手順
 
@@ -132,6 +149,7 @@ pnpm dev
 ```
 
 ### シナリオ
+
 1. **顧客ログイン**: `/login` → Google or LINE SSO（Phase 2 実装済み）→ `/mypage`
 2. **ダッシュボード**: 子供 0 名なら「お子様情報を登録しましょう」CTA、未使用体験ありなら黄色バナー
 3. **プロフィール編集**:
@@ -163,22 +181,26 @@ pnpm dev
 ## 7. リスク・注意事項
 
 ### 7.1 instructors_public ビューの行レベルセキュリティ
+
 - ビューは `security_invoker=false`（オーナー権限実行）でステータス active のみ返す
 - `GRANT SELECT TO anon, authenticated` 済み
 - ベーステーブルへの直接 SELECT は本人 + admin に限定
 
 ### 7.2 子供削除の制約
+
 - reservations.child_id は ON DELETE RESTRICT
 - 子供に紐付く予約があれば削除不可（UI でエラー表示）
 - trial_used が true の子供は削除ボタンを表示しない（誤操作防止）
 
 ### 7.3 mobile-first レイアウト
+
 - 顧客画面は max-w-screen-md（768px）に制限
 - 下部ナビは `fixed bottom-0` で常時表示、`pb-24` で本文下にスペース確保
 
 ## 8. 次のフェーズ（Phase 6: 通常予約）
 
 Phase 6 では以下を実装:
+
 1. **C005 通常予約登録**:
    - 講師選択（C004 から遷移）
    - チケット選択（保有チケット一覧から）

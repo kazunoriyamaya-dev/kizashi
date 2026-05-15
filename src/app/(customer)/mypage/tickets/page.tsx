@@ -53,7 +53,9 @@ export default async function TicketsPage({
       .order('expires_at', { ascending: true }),
     supabase
       .from('tickets')
-      .select('id, name, description, category, price, session_count, valid_days, duration_min, lesson_format')
+      .select(
+        'id, name, description, category, price, session_count, valid_days, duration_min, lesson_format',
+      )
       .eq('status', 'active')
       .order('sort_order')
       .order('price'),
@@ -66,9 +68,7 @@ export default async function TicketsPage({
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">チケット</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          保有チケットの確認・新規購入ができます
-        </p>
+        <p className="mt-1 text-sm text-muted-foreground">保有チケットの確認・新規購入ができます</p>
       </div>
 
       {errorMessage && (
@@ -98,7 +98,9 @@ export default async function TicketsPage({
               <CardContent className="space-y-1 p-4 text-sm">
                 <div className="flex items-center justify-between">
                   <span className="font-semibold">{t.tickets?.name}</span>
-                  <Badge variant="success">残{t.remaining_count}/{t.initial_count}</Badge>
+                  <Badge variant="success">
+                    残{t.remaining_count}/{t.initial_count}
+                  </Badge>
                 </div>
                 <p className="text-xs text-muted-foreground">
                   {t.tickets?.duration_min}分・
@@ -134,9 +136,7 @@ export default async function TicketsPage({
                       <Badge variant="outline">共通</Badge>
                     )}
                     <Badge variant="outline">{t.duration_min}分</Badge>
-                    <Badge variant="outline">
-                      {t.lesson_format === 'pair' ? 'ペア' : '単独'}
-                    </Badge>
+                    <Badge variant="outline">{t.lesson_format === 'pair' ? 'ペア' : '単独'}</Badge>
                     <Badge variant="outline">{t.session_count}回分</Badge>
                     <Badge variant="outline">有効{t.valid_days}日</Badge>
                   </div>
@@ -144,9 +144,7 @@ export default async function TicketsPage({
                     <div className="text-xl font-bold">{formatJPY(t.price)}</div>
                     <form action={startCheckoutAction}>
                       <input type="hidden" name="ticket_id" value={t.id} />
-                      {returnTo && (
-                        <input type="hidden" name="return_to" value={returnTo} />
-                      )}
+                      {returnTo && <input type="hidden" name="return_to" value={returnTo} />}
                       <Button type="submit">購入する</Button>
                     </form>
                   </div>

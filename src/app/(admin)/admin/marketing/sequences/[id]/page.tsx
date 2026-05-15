@@ -21,7 +21,9 @@ export default async function SequenceDetailPage({ params }: { params: { id: str
   const supabase = createSupabaseServerClient();
   const { data: sequence } = await supabase
     .from('marketing_email_sequences')
-    .select('id, name, description, trigger, trigger_tag, from_name, from_email, reply_to, is_active')
+    .select(
+      'id, name, description, trigger, trigger_tag, from_name, from_email, reply_to, is_active',
+    )
     .eq('id', params.id)
     .maybeSingle();
   if (!sequence) notFound();
@@ -32,7 +34,8 @@ export default async function SequenceDetailPage({ params }: { params: { id: str
     .eq('sequence_id', params.id)
     .order('step_order', { ascending: true });
 
-  const nextOrder = (steps?.length ?? 0) > 0 ? Math.max(...(steps ?? []).map((s) => s.step_order)) + 1 : 0;
+  const nextOrder =
+    (steps?.length ?? 0) > 0 ? Math.max(...(steps ?? []).map((s) => s.step_order)) + 1 : 0;
 
   return (
     <div className="space-y-6">

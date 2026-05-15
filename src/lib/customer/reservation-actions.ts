@@ -52,27 +52,21 @@ export async function createNormalReservationAction(formData: FormData) {
   try {
     const candidate = {
       ...raw,
-      pair_participants: raw.pair_participants
-        ? JSON.parse(String(raw.pair_participants))
-        : [],
+      pair_participants: raw.pair_participants ? JSON.parse(String(raw.pair_participants)) : [],
       location: raw.location_json ? JSON.parse(String(raw.location_json)) : null,
       duration_min: Number(raw.duration_min),
     };
     delete (candidate as Record<string, unknown>).location_json;
     parsed = CreateNormalReservationSchema.parse(candidate);
   } catch {
-    redirect(
-      `/mypage/reservations/new?instructorId=${raw.instructor_id ?? ''}&error=validation`,
-    );
+    redirect(`/mypage/reservations/new?instructorId=${raw.instructor_id ?? ''}&error=validation`);
   }
 
   const result = await createNormalReservation(customer.id, me.userId, parsed);
 
   if (!result.ok) {
     const code = ERROR_REDIRECT_MAP[result.errorCode] ?? 'unknown';
-    redirect(
-      `/mypage/reservations/new?instructorId=${parsed.instructor_id}&error=${code}`,
-    );
+    redirect(`/mypage/reservations/new?instructorId=${parsed.instructor_id}&error=${code}`);
   }
 
   revalidatePath('/mypage');

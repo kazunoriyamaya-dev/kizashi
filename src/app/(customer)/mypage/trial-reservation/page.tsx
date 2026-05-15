@@ -18,7 +18,8 @@ const ERROR_MESSAGES: Record<string, string> = {
   validation: '入力内容に不備があります。',
   child_not_found: 'お子様が見つかりません。',
   trial_already_used: 'このお子様は既に体験を利用済みです。',
-  no_available_instructor: '希望条件に合う講師が見つかりませんでした。日時を広げて再度お試しください。',
+  no_available_instructor:
+    '希望条件に合う講師が見つかりませんでした。日時を広げて再度お試しください。',
   time_conflict: '直前に他の方が予約された可能性があります。再度お試しください。',
   unknown: '体験予約に失敗しました。再度お試しください。',
 };
@@ -121,7 +122,8 @@ export default async function TrialReservationPage({
                 ))}
               </div>
               <p className="text-xs text-muted-foreground">
-                Q003: 同じ氏名・フリガナ・生年月日のお子様が既に体験を利用済みの場合、管理者の確認が必要となります。
+                Q003:
+                同じ氏名・フリガナ・生年月日のお子様が既に体験を利用済みの場合、管理者の確認が必要となります。
               </p>
             </CardContent>
           </Card>
@@ -135,7 +137,13 @@ export default async function TrialReservationPage({
                     key={c}
                     className="flex cursor-pointer items-center justify-center gap-2 rounded-md border p-3 text-sm"
                   >
-                    <input type="radio" name="category" value={c} required defaultChecked={c === 'learning'} />
+                    <input
+                      type="radio"
+                      name="category"
+                      value={c}
+                      required
+                      defaultChecked={c === 'learning'}
+                    />
                     {CATEGORY_LABELS[c]}
                   </label>
                 ))}

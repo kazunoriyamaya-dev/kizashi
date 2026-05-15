@@ -33,10 +33,7 @@ export async function fetchAdminDashboardKpi(): Promise<AdminDashboardKpi> {
       .select('id', { count: 'exact', head: true })
       .eq('status', 'active'),
     supabase.from('customers').select('id', { count: 'exact', head: true }),
-    supabase
-      .from('payments')
-      .select('amount', { count: 'exact' })
-      .eq('status', 'paid'),
+    supabase.from('payments').select('amount', { count: 'exact' }).eq('status', 'paid'),
     supabase.from('reservations').select('id', { count: 'exact', head: true }),
     supabase
       .from('reservations')
@@ -52,10 +49,10 @@ export async function fetchAdminDashboardKpi(): Promise<AdminDashboardKpi> {
   if (instructors.error) logger.error('kpi instructors failed', { code: instructors.error.code });
   if (customers.error) logger.error('kpi customers failed', { code: customers.error.code });
   if (payments.error) logger.error('kpi payments failed', { code: payments.error.code });
-  if (reservations.error) logger.error('kpi reservations failed', { code: reservations.error.code });
+  if (reservations.error)
+    logger.error('kpi reservations failed', { code: reservations.error.code });
 
-  const ticketSoldAmount =
-    payments.data?.reduce((sum, p) => sum + (p.amount ?? 0), 0) ?? 0;
+  const ticketSoldAmount = payments.data?.reduce((sum, p) => sum + (p.amount ?? 0), 0) ?? 0;
 
   return {
     instructorCount: instructors.count ?? 0,

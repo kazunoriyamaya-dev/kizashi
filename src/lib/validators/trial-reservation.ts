@@ -14,7 +14,10 @@ import { CategorySchema, DeliveryTypeSchema } from '@/lib/validators/reservation
 export const CreateTrialReservationSchema = z.object({
   child_id: z.string().uuid(),
   category: CategorySchema,
-  duration_min: z.coerce.number().int().refine((v) => [30, 45, 60, 90, 120].includes(v)),
+  duration_min: z.coerce
+    .number()
+    .int()
+    .refine((v) => [30, 45, 60, 90, 120].includes(v)),
   delivery_type: DeliveryTypeSchema,
   from_iso: z.string().datetime(),
   to_iso: z.string().datetime(),

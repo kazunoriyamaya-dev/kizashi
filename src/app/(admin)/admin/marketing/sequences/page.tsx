@@ -28,7 +28,10 @@ export default async function SequencesPage() {
           目的: LP / ブログから取得したリードを段階的にナーチャリングし、
           <b>体験予約申込</b> につなげる。トリガーは購読 / タグ追加 / イベント / 手動から選択。
           各ステップに「無料体験を予約する」CTA URL (例:{' '}
-          <code className="rounded bg-muted px-1">/login?redirect_to=/mypage/trial-reservation</code>) を仕込んでください。
+          <code className="rounded bg-muted px-1">
+            /login?redirect_to=/mypage/trial-reservation
+          </code>
+          ) を仕込んでください。
         </p>
       </div>
 

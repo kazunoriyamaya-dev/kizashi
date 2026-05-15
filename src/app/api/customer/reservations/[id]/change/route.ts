@@ -16,10 +16,7 @@ const BodySchema = z.object({
   location_address_id: z.string().uuid().optional().nullable(),
 });
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { id: string } },
-) {
+export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   const me = await getCurrentUser();
   if (!me || me.role !== 'customer') {
     return NextResponse.json({ error: 'forbidden' }, { status: 403 });

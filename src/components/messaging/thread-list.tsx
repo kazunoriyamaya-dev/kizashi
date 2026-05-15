@@ -53,9 +53,7 @@ export function ThreadList({ threads, basePath }: Props) {
                   </div>
                 </div>
                 {t.lastMessageBody && (
-                  <p className="line-clamp-2 text-xs text-muted-foreground">
-                    {t.lastMessageBody}
-                  </p>
+                  <p className="line-clamp-2 text-xs text-muted-foreground">{t.lastMessageBody}</p>
                 )}
                 {t.lastMessageAt && (
                   <p className="text-[10px] text-muted-foreground">

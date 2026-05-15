@@ -8,26 +8,31 @@
 ### 1.1 Google Maps Routes API ラッパー (`lib/google/maps.ts` 本実装)
 
 **Routes API v2** (`https://routes.googleapis.com/directions/v2:computeRoutes`) を採用:
+
 - HTTP POST + `X-Goog-Api-Key` ヘッダー + `X-Goog-FieldMask` で取得列を最小化（コスト最適化）
 - ロケールは `ja` / リージョン `JP`
 
 **`fetchCarDistance(from, to)`**:
+
 - `travelMode: 'DRIVE'`、`routingPreference: 'TRAFFIC_UNAWARE'`
 - `routes.distanceMeters` を取得 → km 変換
 - 失敗時は null
 
 **`fetchTrainFare(from, to)`**:
+
 - `travelMode: 'TRANSIT'`、`transitPreferences.allowedTravelModes: [TRAIN, SUBWAY, LIGHT_RAIL]`
 - `routes.travelAdvisory.transitFare.units` を取得 → 円換算
 - currencyCode が JPY 以外 / null は失敗扱い
 
 **`calculateTravelFare(input)`** (公開関数):
+
 - mode='car': `calcCarFare(km)` で **往復 × 30円/km、小数点切り上げ (Q009)**
 - mode='train': 取得不可時 `manual=true, manualReason='Q008で手動入力'`
 
 ### 1.2 交通費計算ドメイン (`lib/reservations/travel-fee.ts`)
 
 **`recordTravelFeeForReservation(reservationId)`**:
+
 - 予約 + 講師 base_address + 予約 location_address を取得
 - 講師の `transportation_mode` で `train|car` 自動判定
 - `calculateTravelFare` 呼び出し
@@ -36,16 +41,19 @@
 - raw レスポンスを最小限の summary で `maps_response_summary` に保存
 
 **`setManualTravelFee(input)`**:
+
 - 管理者/講師による手動上書き
 - `requires_admin_review=false` に解除
 - `audit_logs.action='travel_fee.manual_update'` 記録
 
 ### 1.3 予約作成への統合
+
 - `lib/reservations/create.ts` (通常予約): RPC 成功後、`delivery_type='onsite'` の場合のみ `recordTravelFeeForReservation` 実行
 - `lib/reservations/create-trial.ts` (体験予約): 同様に onsite で自動計算
 - Maps API 失敗は予約自体には影響しない（warn ログ + manual=true で保存）
 
 ### 1.4 API + Server Action
+
 - **`POST /api/maps/travel-fee`** (API022): 単発見積り。customer/admin/instructor が呼び出し可
 - **`PATCH /api/admin/reservations/:id/travel-fee`**: 管理者の手動上書き
 - Server Actions:
@@ -53,6 +61,7 @@
   - `recalcTravelFeeAction` — Maps から再計算
 
 ### 1.5 A004 管理者予約詳細への統合
+
 - 対面予約のとき新規「交通費 (Q008/Q009)」カードを表示:
   - 現在の交通費（モード / 金額 / 往復距離 / 手動入力フラグ / レビュー必要フラグ）
   - **手動入力フォーム**: mode / amount / distance_km / reason 入力 → 保存
@@ -62,58 +71,68 @@
 ## 2. 変更したファイル一覧
 
 ### 新規（5）
+
 **lib（2）**
+
 - `src/lib/reservations/travel-fee.ts`
 - `src/lib/admin/travel-fee-actions.ts`
 
 **API Route（2）**
+
 - `src/app/api/maps/travel-fee/route.ts`
 - `src/app/api/admin/reservations/[id]/travel-fee/route.ts`
 
 **完全書き換え（1）**
+
 - `src/lib/google/maps.ts` — Phase 0 のスケルトンから Routes API v2 本実装に置換
 
 ### 更新（3）
+
 - `src/lib/reservations/create.ts` — `delivery_type='onsite'` で `recordTravelFeeForReservation` 実行
 - `src/lib/reservations/create-trial.ts` — 体験予約 onsite で同様
 - `src/app/(admin)/admin/reservations/[id]/page.tsx` — 交通費カード + 手動入力フォーム追加
 
 ### 統計
+
 - 全 TS/TSX: **162 ファイル**（Phase 10 の 158 から +4）
 
 ## 3. 検証結果
 
-| 項目 | 結果 |
-|---|---|
-| TS/TSX 厳密括弧バランス | ✅ 0件不整合 |
-| `@/` alias 解決 | ✅ 0件失敗 |
-| 必須ファイル存在チェック | ✅ 5/5 |
-| use server / use client 違反 | ✅ 0件 |
+| 項目                         | 結果         |
+| ---------------------------- | ------------ |
+| TS/TSX 厳密括弧バランス      | ✅ 0件不整合 |
+| `@/` alias 解決              | ✅ 0件失敗   |
+| 必須ファイル存在チェック     | ✅ 5/5       |
+| use server / use client 違反 | ✅ 0件       |
 
 ## 4. QA 反映
 
-| QA | 反映箇所 |
-|---|---|
+| QA       | 反映箇所                                                                                                    |
+| -------- | ----------------------------------------------------------------------------------------------------------- |
 | **Q008** | 電車運賃取得不可時に `manual=true, manualReason='管理者/講師手動入力'`、`requires_admin_review=true` で表示 |
-| **Q009** | 車は **往復 × 30円/km、小数点切り上げ** (`calcCarFare` ＝ Phase 0 から `Math.ceil(km*2)*30`) |
-| **F038** | 対面予約成立時の `recordTravelFeeForReservation` で自動計算、travel_fees に保存 |
+| **Q009** | 車は **往復 × 30円/km、小数点切り上げ** (`calcCarFare` ＝ Phase 0 から `Math.ceil(km*2)*30`)                |
+| **F038** | 対面予約成立時の `recordTravelFeeForReservation` で自動計算、travel_fees に保存                             |
 
 ## 5. セキュリティ・運用面
 
 ### 5.1 API キー保護
+
 - `GOOGLE_MAPS_API_KEY` は server-side のみで使用、ESLint で client から import 禁止
 - `.env.example` に「API 制限・請求上限を設定」の注意書きあり
 
 ### 5.2 FieldMask によるコスト抑制
+
 - 必要な列のみリクエスト（distanceMeters / duration / transitFare）
 - 1 リクエスト ≈ 1単位の課金
 
 ### 5.3 失敗時のフォールバック
+
 - Maps API 失敗 → 予約自体は成立、travel_fees は `is_manual=true, amount=0` で保存
 - 管理者画面で「⚠ 自動取得失敗のため管理者確認が必要です」表示
 - 月次精算前に必ず手動入力で確定する運用
 
 ### 5.4 raw レスポンスの保存量
+
 - `maps_response_summary` は最小限の field のみ JSONB に保存
 - API レスポンス全体は保存しない（容量・個人情報両面）
 
@@ -127,6 +146,7 @@ pnpm dev
 ```
 
 ### シナリオ
+
 1. **車予約**:
    - 講師 `transportation_mode='car'` を seed で設定
    - 顧客が対面・住所入力で予約 → 確定
@@ -155,25 +175,30 @@ pnpm dev
 ## 8. リスク・注意事項
 
 ### 8.1 Routes API の利用料金
+
 - 通常リクエスト 1回 = $0.005〜$0.020
 - 月次精算前に再計算を多用すると料金増
 - 本番では cache レイヤー（同じ from/to の住所結果を 30 日キャッシュ等）を Phase 14 で検討
 
 ### 8.2 住所文字列の表記揺れ
+
 - API は住所を文字列で受け取るため、表記揺れで距離が変動する可能性
 - 講師の base_address / 顧客の location_address を統一フォーマットで保存（Phase 5 のフォームで「町域・番地」必須化済み）
 
 ### 8.3 行政区画変更
+
 - 住所変更があると再計算が必要
 - `addresses.updated_at` を見て古い travel_fees を invalidate するバッチが将来必要
 
 ### 8.4 transitFare の精度
+
 - Routes API の TRANSIT mode は日本国内全駅対応ではない
 - 大都市圏（東京・大阪等）は概ね取得可能、地方は手動入力が前提
 
 ## 9. 次のフェーズ（Phase 12: 精算 / 月次処理）
 
 Phase 12 で実装:
+
 1. **月次集計バッチ** — payouts テーブルに講師別の (チケット消化売上 − Stripe手数料) × 50% + 指名料 + 交通費を集計
 2. **Stripe Connect Express** — 講師のオンボーディング、charges/payouts_enabled 同期
 3. **管理者 A017 精算管理画面** — 月次一覧 + CSV エクスポート

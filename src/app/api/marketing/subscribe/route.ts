@@ -34,10 +34,7 @@ const Schema = z.object({
   metadata: z.record(z.unknown()).optional(),
 });
 
-function inferLeadSource(
-  body: z.infer<typeof Schema>,
-  referer: string | null,
-): LeadSourceKind {
+function inferLeadSource(body: z.infer<typeof Schema>, referer: string | null): LeadSourceKind {
   if (body.adCampaignId) return 'ad';
   if (body.affiliateLinkId) return 'affiliate';
   if (body.landingPageId) return 'lp';

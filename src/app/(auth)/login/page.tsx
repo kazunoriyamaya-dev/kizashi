@@ -39,9 +39,7 @@ export default async function LoginPage({
       <Card className="w-full max-w-sm">
         <CardHeader className="space-y-2 text-center">
           <CardTitle className="text-2xl">Kizashi にログイン</CardTitle>
-          <CardDescription>
-            Google または LINE アカウントでご利用いただけます
-          </CardDescription>
+          <CardDescription>Google または LINE アカウントでご利用いただけます</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           {errorMessage && (
@@ -56,8 +54,14 @@ export default async function LoginPage({
             </Button>
           </form>
 
-          <form action={`/api/auth/line/start${redirectTo ? `?redirect_to=${encodeURIComponent(redirectTo)}` : ''}`}>
-            <Button type="submit" className="w-full bg-[#06C755] text-white hover:bg-[#06C755]/90" size="lg">
+          <form
+            action={`/api/auth/line/start${redirectTo ? `?redirect_to=${encodeURIComponent(redirectTo)}` : ''}`}
+          >
+            <Button
+              type="submit"
+              className="w-full bg-[#06C755] text-white hover:bg-[#06C755]/90"
+              size="lg"
+            >
               LINE でログイン
             </Button>
           </form>

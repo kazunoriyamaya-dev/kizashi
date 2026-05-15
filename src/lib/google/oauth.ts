@@ -132,7 +132,10 @@ export function decodeIdTokenEmail(idToken: string): string | null {
   const payloadPart = segments[1];
   if (!payloadPart) return null;
   try {
-    const padded = payloadPart.padEnd(payloadPart.length + ((4 - (payloadPart.length % 4)) % 4), '=');
+    const padded = payloadPart.padEnd(
+      payloadPart.length + ((4 - (payloadPart.length % 4)) % 4),
+      '=',
+    );
     const json = JSON.parse(
       Buffer.from(padded.replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString('utf8'),
     ) as { email?: string };

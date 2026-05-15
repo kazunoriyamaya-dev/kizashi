@@ -107,11 +107,15 @@ export async function createTrialReservation(
 
     // 管理者向け通知 (全 admin に展開)
     const { enqueueNotification } = await import('@/lib/notifications/dispatch');
-    await enqueueNotification('trial_pending_admin', { toAdmins: true }, {
-      review_id: reviewId,
-      child_id: child.id,
-      matched_child_id: externalMatch.child_id,
-    });
+    await enqueueNotification(
+      'trial_pending_admin',
+      { toAdmins: true },
+      {
+        review_id: reviewId,
+        child_id: child.id,
+        matched_child_id: externalMatch.child_id,
+      },
+    );
 
     return { ok: true, status: 'pending_review', reviewId, matchedChildId: externalMatch.child_id };
   }
@@ -150,7 +154,10 @@ export async function createTrialReservation(
     if (rpcErr.message === 'trial_already_used' || rpcErr.message === 'child_not_found') {
       return { ok: false, errorCode: rpcErr.message as CreateTrialErrorCode };
     }
-    logger.error('fn_create_trial_reservation failed', { code: rpcErr.code, detail: rpcErr.message });
+    logger.error('fn_create_trial_reservation failed', {
+      code: rpcErr.code,
+      detail: rpcErr.message,
+    });
     return { ok: false, errorCode: 'unknown', detail: rpcErr.code };
   }
 

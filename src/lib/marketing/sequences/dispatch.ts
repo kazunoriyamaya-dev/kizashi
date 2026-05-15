@@ -128,7 +128,8 @@ export async function dispatchEmailSequences(limit = 50): Promise<{
 
     try {
       const fromName = sequence.from_name ?? 'Kizashi';
-      const fromEmail = sequence.from_email ?? process.env.EMAIL_FROM ?? 'noreply@kizashi.example.com';
+      const fromEmail =
+        sequence.from_email ?? process.env.EMAIL_FROM ?? 'noreply@kizashi.example.com';
       const result = await resend.emails.send({
         from: `${fromName} <${fromEmail}>`,
         to: subscriber.email,
@@ -154,7 +155,10 @@ export async function dispatchEmailSequences(limit = 50): Promise<{
       sent++;
     } catch (e) {
       const message = e instanceof Error ? e.message : 'unknown';
-      logger.warn('step mail send failed', { sequenceId: enroll.sequence_id, step: step.step_order });
+      logger.warn('step mail send failed', {
+        sequenceId: enroll.sequence_id,
+        step: step.step_order,
+      });
       if (sendLog) {
         await admin
           .from('marketing_email_sends')

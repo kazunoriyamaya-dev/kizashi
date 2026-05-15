@@ -135,7 +135,7 @@ function trialConfirmed(p: Record<string, unknown>): NotificationTemplateContent
   };
 }
 
-function trialPendingAdmin(p: Record<string, unknown>): NotificationTemplateContent {
+function trialPendingAdmin(_p: Record<string, unknown>): NotificationTemplateContent {
   const url = `${APP_URL}/admin/trial-reviews`;
   return {
     subject: '【Kizashi 管理者】体験予約の重複確認',
@@ -148,7 +148,7 @@ function trialPendingAdmin(p: Record<string, unknown>): NotificationTemplateCont
   };
 }
 
-function ticketPurchased(p: Record<string, unknown>): NotificationTemplateContent {
+function ticketPurchased(_p: Record<string, unknown>): NotificationTemplateContent {
   const url = `${APP_URL}/mypage/tickets`;
   return {
     subject: '【Kizashi】チケットのご購入ありがとうございます',

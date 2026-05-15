@@ -18,7 +18,7 @@ const COOKIE_OPTIONS = {
   maxAge: 60 * 10,
 };
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   const me = await getCurrentUser();
   if (!me || me.role !== 'instructor') {
     return NextResponse.json({ error: 'forbidden' }, { status: 403 });

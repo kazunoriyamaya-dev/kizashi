@@ -24,42 +24,47 @@ import { Button } from '@/components/ui/button';
 export default async function CustomerDetailPage({ params }: { params: { id: string } }) {
   const supabase = createSupabaseServerClient();
 
-  const [{ data: customer }, { data: children }, { data: tickets }, { data: payments }, { data: reservations }] =
-    await Promise.all([
-      supabase
-        .from('customers')
-        .select(`*, profiles!customers_profile_id_fkey ( email, display_name, status )`)
-        .eq('id', params.id)
-        .maybeSingle(),
-      supabase
-        .from('children')
-        .select('id, name, kana, birth_date, trial_used')
-        .eq('customer_id', params.id)
-        .order('birth_date'),
-      supabase
-        .from('customer_tickets')
-        .select(
-          `id, remaining_count, initial_count, expires_at, status,
+  const [
+    { data: customer },
+    { data: children },
+    { data: tickets },
+    { data: payments },
+    { data: reservations },
+  ] = await Promise.all([
+    supabase
+      .from('customers')
+      .select(`*, profiles!customers_profile_id_fkey ( email, display_name, status )`)
+      .eq('id', params.id)
+      .maybeSingle(),
+    supabase
+      .from('children')
+      .select('id, name, kana, birth_date, trial_used')
+      .eq('customer_id', params.id)
+      .order('birth_date'),
+    supabase
+      .from('customer_tickets')
+      .select(
+        `id, remaining_count, initial_count, expires_at, status,
            tickets!customer_tickets_ticket_id_fkey ( name, lesson_format, duration_min )`,
-        )
-        .eq('customer_id', params.id)
-        .order('purchased_at', { ascending: false }),
-      supabase
-        .from('payments')
-        .select('id, amount, status, created_at, stripe_session_id')
-        .eq('customer_id', params.id)
-        .order('created_at', { ascending: false })
-        .limit(20),
-      supabase
-        .from('reservations')
-        .select(
-          `id, start_at, end_at, category, status, delivery_type, reservation_type,
+      )
+      .eq('customer_id', params.id)
+      .order('purchased_at', { ascending: false }),
+    supabase
+      .from('payments')
+      .select('id, amount, status, created_at, stripe_session_id')
+      .eq('customer_id', params.id)
+      .order('created_at', { ascending: false })
+      .limit(20),
+    supabase
+      .from('reservations')
+      .select(
+        `id, start_at, end_at, category, status, delivery_type, reservation_type,
            instructors!reservations_instructor_id_fkey ( nickname )`,
-        )
-        .eq('customer_id', params.id)
-        .order('start_at', { ascending: false })
-        .limit(30),
-    ]);
+      )
+      .eq('customer_id', params.id)
+      .order('start_at', { ascending: false })
+      .limit(30),
+  ]);
 
   if (!customer) notFound();
 
@@ -89,14 +94,8 @@ export default async function CustomerDetailPage({ params }: { params: { id: str
             <Row label="氏名" value={customer.parent_name} />
             <Row label="フリガナ" value={customer.parent_kana ?? '–'} />
             <Row label="メール" value={customer.profiles?.email ?? '–'} />
-            <Row
-              label="LINE 連携"
-              value={customer.line_user_id ? '済' : '–'}
-            />
-            <Row
-              label="Google 連携"
-              value={customer.google_sub ? '済' : '–'}
-            />
+            <Row label="LINE 連携" value={customer.line_user_id ? '済' : '–'} />
+            <Row label="Google 連携" value={customer.google_sub ? '済' : '–'} />
             <Row
               label="アカウント状態"
               value={<StatusBadge status={customer.profiles?.status ?? 'active'} />}

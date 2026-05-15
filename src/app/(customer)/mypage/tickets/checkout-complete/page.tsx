@@ -82,9 +82,7 @@ export default async function CheckoutCompletePage({ searchParams }: PageProps) 
       <CheckCircle2 className="mx-auto h-16 w-16 text-green-600" />
       <div>
         <h1 className="text-2xl font-bold">購入が完了しました</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          チケットがアカウントに付与されました
-        </p>
+        <p className="mt-1 text-sm text-muted-foreground">チケットがアカウントに付与されました</p>
       </div>
 
       <Card>

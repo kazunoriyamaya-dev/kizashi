@@ -44,7 +44,9 @@ export default async function InstructorPayoutsPage({
   const [{ data: connect }, { data: payouts }, { data: invoice }] = await Promise.all([
     supabase
       .from('stripe_connect_accounts')
-      .select('onboarding_completed, charges_enabled, payouts_enabled, stripe_account_id, last_synced_at')
+      .select(
+        'onboarding_completed, charges_enabled, payouts_enabled, stripe_account_id, last_synced_at',
+      )
       .eq('instructor_id', instructor.id)
       .maybeSingle(),
     supabase
@@ -186,9 +188,7 @@ export default async function InstructorPayoutsPage({
               <TableBody>
                 {payouts.map((p) => (
                   <TableRow key={p.id}>
-                    <TableCell className="font-medium">
-                      {p.period_month.slice(0, 7)}
-                    </TableCell>
+                    <TableCell className="font-medium">{p.period_month.slice(0, 7)}</TableCell>
                     <TableCell className="text-right font-mono text-xs">
                       {formatJPY(p.gross_amount)}
                     </TableCell>
@@ -211,9 +211,7 @@ export default async function InstructorPayoutsPage({
                       </Badge>
                     </TableCell>
                     <TableCell className="text-xs">
-                      {p.paid_at
-                        ? new Date(p.paid_at).toLocaleDateString('ja-JP')
-                        : '–'}
+                      {p.paid_at ? new Date(p.paid_at).toLocaleDateString('ja-JP') : '–'}
                     </TableCell>
                   </TableRow>
                 ))}

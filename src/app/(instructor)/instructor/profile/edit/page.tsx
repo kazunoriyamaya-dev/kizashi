@@ -10,7 +10,7 @@ import {
   upsertInvoiceSettingsAction,
 } from '@/lib/instructor/profile-actions';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -102,7 +102,10 @@ export default async function EditInstructorProfilePage({
         <p className="mt-1 text-sm text-muted-foreground">
           適格請求書発行事業者登録番号（T+13桁）。未登録の場合は空欄のまま保存してください。
         </p>
-        <form action={upsertInvoiceSettingsAction} className="mt-4 space-y-4 rounded-lg border bg-card p-6">
+        <form
+          action={upsertInvoiceSettingsAction}
+          className="mt-4 space-y-4 rounded-lg border bg-card p-6"
+        >
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="invoice_registration_no">登録番号</Label>

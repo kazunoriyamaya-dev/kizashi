@@ -87,8 +87,8 @@ export default async function ReservationThanksPage({
       <div className="rounded-md border border-dashed bg-muted/30 p-3 text-xs text-muted-foreground">
         <p className="font-semibold">キャンセル・変更について (Q013)</p>
         <p className="mt-1">
-          開始時刻の 1 時間前まで無料でキャンセル・変更できます。
-          1 時間を過ぎてからのキャンセルはチケット消化扱いとなりますのでご注意ください。
+          開始時刻の 1 時間前まで無料でキャンセル・変更できます。 1
+          時間を過ぎてからのキャンセルはチケット消化扱いとなりますのでご注意ください。
         </p>
       </div>
     </div>

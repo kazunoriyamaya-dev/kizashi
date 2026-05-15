@@ -11,7 +11,12 @@ import { Badge } from '@/components/ui/badge';
 export default async function CustomerProfilePage({
   searchParams,
 }: {
-  searchParams: { updated?: string; child_added?: string; child_updated?: string; child_deleted?: string };
+  searchParams: {
+    updated?: string;
+    child_added?: string;
+    child_updated?: string;
+    child_deleted?: string;
+  };
 }) {
   const me = await getCurrentUser();
   if (!me) return null;
@@ -38,16 +43,15 @@ export default async function CustomerProfilePage({
         .maybeSingle()
     : { data: null };
 
-  const flash =
-    searchParams.updated
-      ? 'プロフィールを更新しました'
-      : searchParams.child_added
-        ? 'お子様情報を追加しました'
-        : searchParams.child_updated
-          ? 'お子様情報を更新しました'
-          : searchParams.child_deleted
-            ? 'お子様情報を削除しました'
-            : null;
+  const flash = searchParams.updated
+    ? 'プロフィールを更新しました'
+    : searchParams.child_added
+      ? 'お子様情報を追加しました'
+      : searchParams.child_updated
+        ? 'お子様情報を更新しました'
+        : searchParams.child_deleted
+          ? 'お子様情報を削除しました'
+          : null;
 
   return (
     <div className="space-y-6">

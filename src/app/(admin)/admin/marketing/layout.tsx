@@ -5,7 +5,18 @@
  * サブナビゲーションを表示する。
  */
 import Link from 'next/link';
-import { Sparkles, Image as ImageIcon, MessageCircle, MailPlus, ListChecks, FileText, PenSquare, Link as LinkIcon, BarChart3, Megaphone, LayoutDashboard } from 'lucide-react';
+import {
+  Sparkles,
+  Image as ImageIcon,
+  MessageCircle,
+  MailPlus,
+  ListChecks,
+  PenSquare,
+  Link as LinkIcon,
+  BarChart3,
+  Megaphone,
+  LayoutDashboard,
+} from 'lucide-react';
 import { requireRole } from '@/lib/auth';
 import { MarketingSubnav } from '@/components/admin/marketing/subnav';
 
@@ -33,10 +44,7 @@ export default async function MarketingLayout({ children }: { children: React.Re
       <div className="flex items-center gap-2 border-b pb-2">
         <Sparkles className="h-5 w-5 text-primary" />
         <h2 className="text-lg font-semibold">マーケティング自動化</h2>
-        <Link
-          href="/admin"
-          className="ml-auto text-xs text-muted-foreground hover:underline"
-        >
+        <Link href="/admin" className="ml-auto text-xs text-muted-foreground hover:underline">
           ← Kizashi 管理に戻る
         </Link>
       </div>

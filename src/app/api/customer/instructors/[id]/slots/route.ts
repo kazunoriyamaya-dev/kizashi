@@ -16,10 +16,7 @@ import { getCurrentUser } from '@/lib/auth';
 import { fetchAvailableSlots } from '@/lib/reservations/availability';
 import { logger } from '@/lib/logger';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } },
-) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   const me = await getCurrentUser();
   if (!me || me.role !== 'customer') {
     return NextResponse.json({ error: 'forbidden' }, { status: 403 });

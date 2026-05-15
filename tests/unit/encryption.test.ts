@@ -26,7 +26,12 @@ describe('AES-256-GCM encryption', () => {
   });
   it('改ざんされた暗号文は復号失敗', () => {
     const enc = encrypt('payload');
-    const tampered = enc.slice(0, -1) + 'X';
+    // Base64 のパディング外の末尾文字は無視されることがあるため、authTag (中央) を改ざんする
+    const parts = enc.split(':');
+    const tag = Buffer.from(parts[1]!, 'base64');
+    tag[0] = (tag[0]! ^ 0xff) & 0xff;
+    parts[1] = tag.toString('base64');
+    const tampered = parts.join(':');
     expect(() => decrypt(tampered)).toThrow();
   });
   it('フォーマット不正は例外', () => {

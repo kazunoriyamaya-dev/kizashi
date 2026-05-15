@@ -78,9 +78,7 @@ export default async function InstructorReservationListPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">予約一覧</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          自分が担当する予約を確認できます
-        </p>
+        <p className="mt-1 text-sm text-muted-foreground">自分が担当する予約を確認できます</p>
       </div>
 
       <Card>

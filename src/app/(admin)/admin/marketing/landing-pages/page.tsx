@@ -27,7 +27,8 @@ export default async function LandingPagesPage() {
         <p className="mt-1 text-sm text-muted-foreground">
           /lp/[slug] で公開されます。LP のゴールは <b>新規顧客の体験予約申込</b>。
           公開ページのヘッダー / フッターには常に「無料体験予約」CTA が表示され、
-          /login?redirect_to=/mypage/trial-reservation 経由でアトリビューション付きで体験予約画面に誘導します。
+          /login?redirect_to=/mypage/trial-reservation
+          経由でアトリビューション付きで体験予約画面に誘導します。
         </p>
       </div>
 
@@ -84,12 +85,16 @@ export default async function LandingPagesPage() {
           />
         </div>
         <div className="space-y-1 sm:col-span-2">
-          <Label htmlFor="trial_cta_bullets">体験で得られるメリット (1 行 1 項目 or カンマ区切り)</Label>
+          <Label htmlFor="trial_cta_bullets">
+            体験で得られるメリット (1 行 1 項目 or カンマ区切り)
+          </Label>
           <Textarea
             id="trial_cta_bullets"
             name="trial_cta_bullets"
             rows={3}
-            placeholder={'お子様 1 人につき 1 回まで無料\nお子様に合った先生を見つけられます\n勧誘は一切ありません'}
+            placeholder={
+              'お子様 1 人につき 1 回まで無料\nお子様に合った先生を見つけられます\n勧誘は一切ありません'
+            }
           />
         </div>
         <div className="space-y-1 sm:col-span-2">

@@ -53,10 +53,7 @@ export function ReservationChangeForm({
   useEffect(() => {
     setLoading(true);
     setSelected(null);
-    const url = new URL(
-      `/api/customer/instructors/${instructorId}/slots`,
-      window.location.origin,
-    );
+    const url = new URL(`/api/customer/instructors/${instructorId}/slots`, window.location.origin);
     url.searchParams.set('from', fromDate.toISOString());
     url.searchParams.set('to', toDate.toISOString());
     url.searchParams.set('duration_min', String(durationMin));

@@ -43,12 +43,17 @@ interface Slot {
 
 interface Props {
   instructor: InstructorBrief;
-  children: ChildOption[];
+  childrenList: ChildOption[];
   tickets: TicketOption[];
   defaultCategory: Category;
 }
 
-export function ReservationForm({ instructor, children, tickets, defaultCategory }: Props) {
+export function ReservationForm({
+  instructor,
+  childrenList: children,
+  tickets,
+  defaultCategory,
+}: Props) {
   const [isPending, startTransition] = useTransition();
 
   const [childId, setChildId] = useState(children[0]?.id ?? '');
@@ -95,10 +100,7 @@ export function ReservationForm({ instructor, children, tickets, defaultCategory
     if (!selectedTicket) return;
     setSlotsLoading(true);
     setSelectedSlot(null);
-    const url = new URL(
-      `/api/customer/instructors/${instructor.id}/slots`,
-      window.location.origin,
-    );
+    const url = new URL(`/api/customer/instructors/${instructor.id}/slots`, window.location.origin);
     url.searchParams.set('from', fromDate.toISOString());
     url.searchParams.set('to', toDate.toISOString());
     url.searchParams.set('duration_min', String(selectedTicket.duration_min));
@@ -135,7 +137,8 @@ export function ReservationForm({ instructor, children, tickets, defaultCategory
       return setError('対面の場合は実施場所の住所を入力してください');
 
     const pairParticipants: Array<
-      { type: 'child'; child_id: string } | { type: 'free_text'; name: string; note?: string | null }
+      | { type: 'child'; child_id: string }
+      | { type: 'free_text'; name: string; note?: string | null }
     > = [];
     if (selectedTicket.lesson_format === 'pair') {
       for (const id of pairChildIds) {
@@ -240,7 +243,10 @@ export function ReservationForm({ instructor, children, tickets, defaultCategory
             </div>
           )}
           {tickets.map((t) => (
-            <label key={t.id} className="flex items-center justify-between gap-2 rounded-md border p-3 text-sm">
+            <label
+              key={t.id}
+              className="flex items-center justify-between gap-2 rounded-md border p-3 text-sm"
+            >
               <div className="flex items-center gap-2">
                 <input
                   type="radio"
@@ -252,7 +258,8 @@ export function ReservationForm({ instructor, children, tickets, defaultCategory
                 <div>
                   <div className="font-medium">{t.ticket_name}</div>
                   <div className="text-xs text-muted-foreground">
-                    {t.duration_min}分・{t.lesson_format === 'pair' ? 'ペア' : '単独'} ・残{t.remaining_count}回 ・期限{new Date(t.expires_at).toLocaleDateString('ja-JP')}
+                    {t.duration_min}分・{t.lesson_format === 'pair' ? 'ペア' : '単独'} ・残
+                    {t.remaining_count}回 ・期限{new Date(t.expires_at).toLocaleDateString('ja-JP')}
                   </div>
                 </div>
               </div>
@@ -363,7 +370,9 @@ export function ReservationForm({ instructor, children, tickets, defaultCategory
                       )
                     }
                   />
-                  <span>{c.name}（{c.kana}）</span>
+                  <span>
+                    {c.name}（{c.kana}）
+                  </span>
                 </label>
               ))}
             <Input

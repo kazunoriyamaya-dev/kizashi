@@ -67,7 +67,12 @@ export async function trackAndResolve(input: TrackClickInput): Promise<TrackedRe
 
 function appendUtm(
   url: string,
-  utm: { utm_source: string | null; utm_medium: string | null; utm_campaign: string | null; utm_content: string | null },
+  utm: {
+    utm_source: string | null;
+    utm_medium: string | null;
+    utm_campaign: string | null;
+    utm_content: string | null;
+  },
 ): string {
   try {
     const u = new URL(url);

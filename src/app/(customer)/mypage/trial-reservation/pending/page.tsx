@@ -44,7 +44,8 @@ export default async function TrialPendingPage({
             重複利用ではないか管理者が確認しますので、しばらくお待ちください。
           </p>
           <p className="text-xs text-yellow-800">
-            通常は 1 営業日以内に確認が完了します。確認結果はメール / LINE / アプリ内通知でお知らせします。
+            通常は 1 営業日以内に確認が完了します。確認結果はメール / LINE /
+            アプリ内通知でお知らせします。
           </p>
         </CardContent>
       </Card>
@@ -57,14 +58,24 @@ export default async function TrialPendingPage({
           </div>
           <div className="flex justify-between">
             <span className="text-muted-foreground">ステータス</span>
-            <Badge variant={review.status === 'pending' ? 'warning' : review.status === 'approved' ? 'success' : 'destructive'}>
-              {review.status === 'pending' ? '確認中' : review.status === 'approved' ? '承認済み' : '却下'}
+            <Badge
+              variant={
+                review.status === 'pending'
+                  ? 'warning'
+                  : review.status === 'approved'
+                    ? 'success'
+                    : 'destructive'
+              }
+            >
+              {review.status === 'pending'
+                ? '確認中'
+                : review.status === 'approved'
+                  ? '承認済み'
+                  : '却下'}
             </Badge>
           </div>
           {review.review_note && (
-            <p className="text-xs text-muted-foreground">
-              管理者メモ: {review.review_note}
-            </p>
+            <p className="text-xs text-muted-foreground">管理者メモ: {review.review_note}</p>
           )}
         </CardContent>
       </Card>

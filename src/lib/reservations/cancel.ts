@@ -88,8 +88,7 @@ export async function cancelReservation(
     ticket_return_rule_instructor: policyRow?.ticket_return_rule_instructor ?? 'full_return',
   };
 
-  const ticketUnitPrice =
-    rsv.customer_tickets?.tickets?.price ?? 0;
+  const ticketUnitPrice = rsv.customer_tickets?.tickets?.price ?? 0;
 
   const evaluation = evaluateCancelPolicy({
     startAt: rsv.start_at,

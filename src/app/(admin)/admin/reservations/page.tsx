@@ -39,11 +39,7 @@ export default async function AdminReservationsPage({
 }: {
   searchParams: { filter?: string };
 }) {
-  const filter = (searchParams.filter ?? 'upcoming') as
-    | 'all'
-    | 'upcoming'
-    | 'past'
-    | 'cancelled';
+  const filter = (searchParams.filter ?? 'upcoming') as 'all' | 'upcoming' | 'past' | 'cancelled';
   const supabase = createSupabaseServerClient();
   const now = new Date().toISOString();
 

@@ -96,10 +96,7 @@ export async function updateInstructorSelfAction(formData: FormData) {
   }
 
   // 3. profiles.display_name も nickname に同期
-  await admin
-    .from('profiles')
-    .update({ display_name: rest.nickname })
-    .eq('id', me.userId);
+  await admin.from('profiles').update({ display_name: rest.nickname }).eq('id', me.userId);
 
   // 4. audit_logs
   await admin.from('audit_logs').insert({
